@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#0f0a07">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/png" href="res/img/logo_icon.png">
+<title>Võ Lâm Hiệp Truyện</title>
+
+<!-- 1. Core Fonts & Unified Master Stylesheet -->
+<link rel="stylesheet" href="res/fonts/fontawesome.min.css">
+<link rel="stylesheet" href="res/fonts/ibm-plex-mono.css">
+<link rel="stylesheet" href="css/app.root.css">
+<script src="core/engine/viewport.js"></script>
+</head>
+<body>
+<div id="game-app">
+  <div id="game-bg"></div>
+  <div id="game-viewport">
+    <!-- 1. Canvas / Map Layer -->
+    <div id="game-world-layer">
+      <section id="battle">
+        <div id="bg"></div>
+        <canvas id="arena"></canvas>
+        <div id="hud">
+          <div class="jxs"><span>Cấp</span><b id="lvS">1</b></div>
+          <div class="bar hp"><i id="hpBar"></i><span id="hpTxt"></span></div>
+          <div class="bar mp"><i id="mpBar"></i><span id="mpTxt"></span></div>
+          <div class="bar xp"><i id="xpBar"></i><span id="xpTxt"></span></div>
+          <div class="jxs" title="Lực tay phải (sát thương chiêu chính)"><span>Lực tay</span><b id="pwS">0</b></div>
+          <div id="mainSk"></div>
+        </div>
+        <div id="topCtl"><span id="fpsBadge" class="fps-badge">60 FPS</span><button id="rideBtn" class="chip"></button><button id="rotBtn" class="chip"></button><button id="ctrlBtn" class="chip"></button></div>
+        <button id="inBtn" class="chip"></button>
+        <div id="townBar" class="hidden"><b id="townName"></b><button class="btn sm" id="bShop">Cửa hàng</button><button class="btn sm" id="bKtcT">Kỳ Trân Các</button><button class="btn sm" id="bStashT">Rương Chứa Đồ</button><button class="btn sm" id="bSellTown">Bán đồ không giữ</button><button class="btn sm on" id="bBack">Trở lại bãi</button></div>
+        <div id="pad">
+          <div class="hb">
+            <button class="pbtn pot hp" id="bHp" title="Thuốc sinh lực (phím 1)"><i></i><div class="cd"></div><em></em><b>1</b><s class="pk">▾</s></button>
+            <button class="pbtn pot mp" id="bMp" title="Thuốc nội lực (phím 2)"><i></i><div class="cd"></div><em></em><b>2</b><s class="pk">▾</s></button>
+            <button class="pbtn pot tp" id="bTp" title="Thổ Địa Phù (phím 3)"><i></i><div class="cd"></div><b>3</b></button>
+          </div>
+          <div class="hb"><button class="pbtn mn" id="bMain"><i></i></button></div>
+          <div class="hb">
+            <button class="pbtn sk" data-i="0" title=""><i></i><b>Q</b><s class="pk">▾</s></button>
+            <button class="pbtn sk" data-i="1" title=""><i></i><b>W</b><s class="pk">▾</s></button>
+            <button class="pbtn sk" data-i="2" title=""><i></i><b>E</b><s class="pk">▾</s></button>
+            <button class="pbtn sk" data-i="3" title=""><i></i><b>R</b><s class="pk">▾</s></button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 2. UI Ingame Layer (Chỉ hiện khi đã vào game) -->
+    <div id="game-ui-layer" class="screen-layer">
+      <header id="top">
+        <div class="lvbox"><span id="lv">1</span></div>
+        <div class="topmid">
+          <div class="row"><b id="heroName">JX - IDLE</b><span id="stageLbl"></span></div>
+        </div>
+        <button id="ktcBtn" title="Kỳ Trân Các">Kỳ Trân Các</button>
+        <div class="gold"><span class="coin"></span><span id="gold">0</span><img class="knbi" src="res/icons/props/knb.png" alt=""><span id="knbTop">0</span></div>
+        <button id="actBtn" title="Nhiệm vụ · Phó bản">⚔</button>
+        <button id="giftBtn" title="Phần thưởng">🎁</button>
+        <button id="compactBtn" title="Thu gọn / mở rộng sân đấu">⛶</button>
+      </header>
+
+      <main id="panel">
+        <div class="tab" id="t-log"></div>
+        <div class="tab hidden" id="t-char"></div>
+        <div class="tab hidden" id="t-skill"></div>
+        <div class="tab hidden" id="t-inv"></div>
+        <div class="tab hidden" id="t-forge"></div>
+        <div class="tab hidden" id="t-quest"></div>
+        <div class="tab hidden" id="t-more"></div>
+      </main>
+
+      <nav id="tabs">
+        <button data-t="log" class="on log_btn" id="log_btn">Giang hồ</button>
+        <button data-t="char" class="char_btn" id="m_char_btn">Nhân vật<em class="dot" id="dotChar"></em></button>
+        <button data-t="inv" class="bag_btn" id="m_bag_btn">Hành trang</button>
+        <button data-t="skill" class="skill_btn" id="m_skill_btn">Võ công<em class="dot" id="dotSkill"></em></button>
+        <button data-t="forge" class="forge_btn" id="m_forge_btn">Lò rèn<em class="dot" id="dotForge"></em></button>
+        <button data-t="quest" class="quest_btn" id="m_quest_btn">Nhiệm vụ<em class="dot" id="dotQuest"></em></button>
+        <button id="tabRide" class="tride tteam">Tổ đội</button>
+        <button data-t="more" class="more_btn" id="m_more_btn">Hệ thống</button>
+      </nav>
+    </div>
+
+    <!-- 3. Auth & Character Screens (Chỉ hiện ngoài sảnh) -->
+    <div id="auth-screen" class="screen-layer">
+      <img id="cornerIdentify" src="res/img/identify_.png" class="landing-corner-identify" alt="18+">
+      <img id="landingLogoText" src="res/img/logo_text.png" class="landing-top-logo" alt="Võ Lâm Hiệp Truyện - IDLE">
+    </div>
+
+    <div id="char-select-screen" class="screen-layer"></div>
+
+    <div id="modal" class="hidden" role="dialog" aria-modal="true"><div class="mbox" tabindex="-1"><button class="mx" id="mClose">✕</button><div id="mBody"></div></div></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<!-- 1. Third-Party Libraries (core/lib/) -->
+<script src="core/lib/morphdom.js"></script>
+
+<!-- 2. Core Game Data & Configs (core/data/) -->
+<script src="core/data/locales.js"></script>
+<script src="core/data/factions.js"></script>
+<script src="core/data/effects.js"></script>
+<script src="core/data/skills.js"></script>
+<script src="core/data/shops.js"></script>
+
+<script src="core/data/gear_magic.js"></script>
+<script src="core/data/gear_base.js"></script>
+<script src="core/data/gear_blue.js"></script>
+<script src="core/data/gear_purple.js"></script>
+<script src="core/data/gear_gold.js"></script>
+<script src="core/data/gear_platina.js"></script>
+
+<script src="core/data/item_consumables.js"></script>
+<script src="core/data/item_materials.js"></script>
+<script src="core/data/item_quest.js"></script>
+
+<script src="core/data/monsters.js"></script>
+<script src="core/data/zones.js"></script>
+<script src="core/data/anim_monsters.js"></script>
+<script src="core/data/anim_characters.js"></script>
+<script src="core/data/doll_res.js"></script>
+<script src="core/data/audio.js"></script>
+
+<!-- 3. Engine Core & Runtime Processors (core/engine/) -->
+<script src="core/engine/security.js"></script>
+<script src="core/engine/session.js"></script>
+<script src="core/engine/h5anim.js"></script>
+<script src="core/engine/doll_renderer.js"></script>
+<script src="core/engine/gear_activator.js"></script>
+<script src="core/engine/app.js"></script>
+
+<!-- 4. UI Views & DOM Components (core/ui/) -->
+<script src="core/ui/auth_view.js"></script>
+<script src="core/ui/hud_menu.js"></script>
+
+<!-- 5. Developer Tools & Live Utilities (core/tools/) -->
+<script src="core/tools/admin_panel.js"></script>
+<script src="core/tools/livereload.js"></script>
+</body>
+</html>

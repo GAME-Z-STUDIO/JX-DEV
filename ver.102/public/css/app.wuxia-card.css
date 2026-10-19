@@ -1,0 +1,131 @@
+/**
+ * JX - IDLE: Standard Wuxia Panel & Card Design System (app.wuxia-card.css)
+ * Unified aesthetic across Login, Character Select, Character Creation, and In-game dialogs:
+ * - Sharp angular bronze borders (2px solid #6b4324, inner 1px #22150b, 0px border-radius)
+ * - Corner brackets (.wuxia-bracket-tl and .wuxia-bracket-br)
+ * - Subtle blended wind pattern (res/img/pattern-wind.svg)
+ * - Deep antique lacquered bronze-black background (rgba(16, 11, 7, 0.96))
+ */
+
+/* ==========================================================================
+   1. Base Wuxia Card / Panel Container
+   ========================================================================== */
+.wuxia-panel,
+.wuxia-card,
+#csel .cs-panel {
+  position: relative !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  border-radius: 0 !important;
+  background: rgba(16, 11, 7, 0.96) !important;
+  border: 2px solid #6b4324 !important;
+  box-shadow:
+    0 0 0 1px #22150b,
+    0 20px 48px rgba(0, 0, 0, 0.95) !important;
+  color: var(--text, #ede4d8) !important;
+  overflow: visible !important;
+  padding: 16px 20px !important;
+}
+
+/* ==========================================================================
+   2. Wind & Cloud Pattern Overlay (.wuxia-wind-pattern)
+   ========================================================================== */
+.wuxia-wind-pattern,
+.auth-wind-pattern {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  pointer-events: none !important;
+  opacity: 0.16 !important;
+  z-index: 1 !important;
+  filter: sepia(100%) hue-rotate(350deg) saturate(180%) !important;
+}
+
+/* ==========================================================================
+   3. Angular Corner Brackets (.wuxia-bracket)
+   ========================================================================== */
+.wuxia-bracket,
+.auth-bracket {
+  position: absolute !important;
+  width: 18px !important;
+  height: 18px !important;
+  pointer-events: none !important;
+  z-index: 20 !important;
+}
+
+.wuxia-bracket-tl,
+.auth-bracket-tl {
+  top: 8px !important;
+  left: 8px !important;
+  border-top: 2px solid #e5b364 !important;
+  border-left: 2px solid #e5b364 !important;
+  filter: drop-shadow(0 0 3px rgba(229, 179, 100, 0.35)) !important;
+}
+
+.wuxia-bracket-br,
+.auth-bracket-br {
+  bottom: 8px !important;
+  right: 8px !important;
+  border-bottom: 2px solid #e5b364 !important;
+  border-right: 2px solid #e5b364 !important;
+  filter: drop-shadow(0 0 3px rgba(229, 179, 100, 0.35)) !important;
+}
+
+.wuxia-bracket-tr,
+.auth-bracket-tr {
+  top: 8px !important;
+  right: 8px !important;
+  border-top: 2px solid #e5b364 !important;
+  border-right: 2px solid #e5b364 !important;
+  filter: drop-shadow(0 0 3px rgba(229, 179, 100, 0.35)) !important;
+}
+
+.wuxia-bracket-bl,
+.auth-bracket-bl {
+  bottom: 8px !important;
+  left: 8px !important;
+  border-bottom: 2px solid #e5b364 !important;
+  border-left: 2px solid #e5b364 !important;
+  filter: drop-shadow(0 0 3px rgba(229, 179, 100, 0.35)) !important;
+}
+
+/* ==========================================================================
+   4. Content Wrapper Above Pattern
+   ========================================================================== */
+.wuxia-content-wrap,
+.auth-content-wrap {
+  position: relative !important;
+  z-index: 5 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  gap: 8px !important;
+}
+
+/* ==========================================================================
+   5. Wuxia Sub-Brand Header
+   ========================================================================== */
+.wuxia-sub-brand,
+.auth-sub-brand {
+  font-family: var(--font, monospace);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #f8be78;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  user-select: none;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+.wuxia-sub-dash,
+.auth-sub-dash {
+  color: #c48348;
+  opacity: 0.8;
+}

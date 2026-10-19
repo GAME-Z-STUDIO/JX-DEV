@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 420" fill="none">
+  <!-- === BOTTOM LEFT CLUSTER === -->
+  <!-- Main flowing wind arc -->
+  <path d="M-20 400 C40 370, 100 385, 155 360 C210 335, 240 305, 200 280 C170 260, 130 275, 110 300" stroke="white" stroke-width="1.4" fill="none" opacity="0.45"/>
+  <!-- Secondary arc -->
+  <path d="M-20 420 C50 390, 120 405, 175 378 C220 355, 255 320, 215 295 C188 275, 148 288, 125 312" stroke="white" stroke-width="0.9" fill="none" opacity="0.3"/>
+  <!-- Tight inner curl -->
+  <path d="M30 420 C80 395, 140 412, 190 388 C230 368, 260 338, 225 314" stroke="white" stroke-width="0.6" fill="none" opacity="0.2"/>
+  <!-- Short trailing wisps -->
+  <path d="M-10 380 C30 362, 80 372, 118 355" stroke="white" stroke-width="0.5" fill="none" opacity="0.18"/>
+  <path d="M15 365 C55 348, 102 357, 138 342" stroke="white" stroke-width="0.4" fill="none" opacity="0.14"/>
+
+  <!-- Cloud puff bottom-left -->
+  <path d="M20 350 C30 332, 55 325, 75 335 C82 320, 105 316, 118 330 C132 318, 155 320, 160 335 C168 330, 178 340, 172 352 C185 355, 188 370, 175 375 C178 388, 162 395, 148 388 C140 398, 118 400, 108 390 C94 400, 72 397, 66 386 C50 393, 30 385, 28 372 C14 370, 10 358, 20 350Z" fill="white" fill-opacity="0.03" stroke="white" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- === TOP RIGHT CLUSTER === -->
+  <!-- Primary grand sweep -->
+  <path d="M620 -10 C575 20, 535 8, 490 35 C445 62, 425 100, 460 125 C485 142, 520 132, 540 110" stroke="white" stroke-width="1.4" fill="none" opacity="0.42"/>
+  <!-- Secondary sweep -->
+  <path d="M640 10 C590 40, 548 28, 500 55 C455 80, 432 118, 468 143 C494 160, 530 148, 550 125" stroke="white" stroke-width="0.9" fill="none" opacity="0.28"/>
+  <!-- Tertiary tighter arc -->
+  <path d="M630 30 C588 55, 552 44, 510 70 C468 95, 445 130, 478 155 C502 170, 536 160, 555 138" stroke="white" stroke-width="0.6" fill="none" opacity="0.18"/>
+  <!-- Top trailing wisps -->
+  <path d="M620 50 C582 68, 548 58, 514 78" stroke="white" stroke-width="0.5" fill="none" opacity="0.16"/>
+  <path d="M610 68 C572 85, 538 75, 504 95" stroke="white" stroke-width="0.4" fill="none" opacity="0.12"/>
+
+  <!-- Cloud puff top-right -->
+  <path d="M560 18 C568 4, 588 -2, 604 10 C610 -4, 628 -6, 638 8 C648 0, 665 6, 662 20 C674 22, 678 36, 666 42 C670 54, 656 60, 644 54 C638 62, 620 62, 614 52 C602 60, 582 56, 578 44 C564 42, 558 32, 560 18Z" fill="white" fill-opacity="0.03" stroke="white" stroke-width="0.5" opacity="0.38"/>
+
+  <!-- === CENTER-BOTTOM LONG WISP === -->
+  <path d="M180 420 C230 400, 290 412, 348 395 C400 380, 440 358, 420 335 C406 318, 380 322, 360 338" stroke="white" stroke-width="0.8" fill="none" opacity="0.22"/>
+  <path d="M200 432 C255 410, 318 424, 378 406 C432 390, 472 366, 450 342" stroke="white" stroke-width="0.5" fill="none" opacity="0.15"/>
+
+  <!-- === LEFT MID TRAILING WISPS === -->
+  <path d="M-15 300 C25 280, 72 292, 105 272 C135 255, 145 228, 120 212" stroke="white" stroke-width="0.7" fill="none" opacity="0.2"/>
+  <path d="M-15 320 C28 299, 78 310, 112 290" stroke="white" stroke-width="0.45" fill="none" opacity="0.14"/>
+
+  <!-- === RIGHT MID TRAILING WISPS === -->
+  <path d="M615 200 C580 218, 545 208, 514 228 C484 246, 474 272, 496 286" stroke="white" stroke-width="0.7" fill="none" opacity="0.2"/>
+  <path d="M618 220 C582 237, 545 227, 514 248" stroke="white" stroke-width="0.45" fill="none" opacity="0.13"/>
+</svg>

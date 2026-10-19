@@ -1,0 +1,42 @@
+/**
+ * JX-IDLE Unified Color Palette & Variables (app.variables.css)
+ */
+:root {
+  --font: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+
+  /* Theme Palette: Bronze Brown & Soft Orange Accent */
+  --bg: #0f0a07;
+  --bg-darker: #080503;
+  --panel: #17100b;
+  --panel2: #221710;
+  --panel-elevated: #2c1e15;
+  --line: #4a3220;
+  --line2: #69452b;
+  --line-bold: #8e5c36;
+  --line-accent: #c48348;
+  
+  --bronze: #b0743e;
+  --bronze-light: #cfa068;
+  --orange-accent: #f2963a;
+  --orange-soft: #f8be78;
+  --orange-glow: rgba(242, 150, 58, 0.35);
+
+  --gold: #e8bd6a;
+  --gold2: #b48a44;
+  --text: #ede4d8;
+  --text-dim: #a49381;
+  --dim: #988775;
+  --red: #c8321f;
+  --hp: #b8322a;
+  --mp: #2f64b8;
+  --xp: #c9a23a;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+
+  /* Element Colors */
+  --c-kim: #ecd688;
+  --c-moc: #50c878;
+  --c-thuy: #4aa3df;
+  --c-hoa: #e74c3c;
+  --c-tho: #c39b5e;
+}

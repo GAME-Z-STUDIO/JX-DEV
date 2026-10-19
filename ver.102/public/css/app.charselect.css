@@ -1,0 +1,824 @@
+/**
+ * JX - IDLE: Character Selection & Creation Interface (app.charselect.css)
+ * Angular Wuxia antique bronze aesthetic with sharp corners (border-radius: 0),
+ * 1:1 full-canvas hero artwork aligned over background_2.jpg,
+ * flat gold/bronze buttons with pattern-wind.svg accent,
+ * zero harsh glow, particles-only background effects.
+ */
+
+/* ==========================================================================
+   Full Screen Background & Overlay
+   ========================================================================== */
+#cnew {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1920px !important;
+  height: 1080px !important;
+  max-width: 1920px !important;
+  max-height: 1080px !important;
+  z-index: 99998 !important;
+  display: block !important;
+  color: var(--text, #ede4d8);
+  background: transparent !important;
+  overflow: hidden !important;
+  box-sizing: border-box;
+  padding: 0 !important;
+  user-select: none;
+}
+
+#cnew::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 50%, transparent 40%, rgba(6, 4, 2, 0.85) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Isolate character selection and creation from game interface */
+body:has(#cnew) #app > header,
+body:has(#cnew) #app > section,
+body:has(#cnew) #app > main,
+body:has(#cnew) #app > nav,
+body:has(#cnew) #chatBox,
+body:has(#cnew) #u20log,
+body:has(#cnew) #pad,
+body:has(#cnew) #tabs,
+body:has(#cnew) #topCtl,
+body:has(#cnew) #townBar,
+body:has(#csel) #app > header,
+body:has(#csel) #app > section,
+body:has(#csel) #app > main,
+body:has(#csel) #app > nav,
+body:has(#csel) #chatBox,
+body:has(#csel) #u20log,
+body:has(#csel) #pad,
+body:has(#csel) #tabs,
+body:has(#csel) #topCtl,
+body:has(#csel) #townBar {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+
+
+/* ==========================================================================
+   Background Particles Layer (Mist & Qi Glows Disabled)
+   ========================================================================== */
+.cnew-bg-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.cnew-ambient-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cnew-fx-mist,
+.cnew-fx-qi,
+.cnew-fx-smoke {
+  display: none !important;
+}
+
+/* ==========================================================================
+   1:1 Fullscreen Hero Artwork Layer (Aligned Perfectly to background_2.jpg)
+   ========================================================================== */
+.cnew-hero-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.cnew-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.7));
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  -webkit-mask-image: radial-gradient(circle at 62% 50%, #000 40%, rgba(0, 0, 0, 0.85) 62%, rgba(0, 0, 0, 0.3) 82%, transparent 98%);
+  mask-image: radial-gradient(circle at 62% 50%, #000 40%, rgba(0, 0, 0, 0.85) 62%, rgba(0, 0, 0, 0.3) 82%, transparent 98%);
+}
+
+.cnew-hero-img.fade-out {
+  opacity: 0.15;
+  transform: scale(0.99);
+}
+
+/* ==========================================================================
+   1. Left Unified Control Panel (Angular Bronze Plaque)
+   Positioned on the left side, scaling smoothly if window is compact
+   ========================================================================== */
+.cnew-panel-left {
+  position: absolute;
+  left: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  transform-origin: left center;
+  z-index: 10;
+  width: 385px;
+  max-height: 1020px;
+  border-radius: 0 !important;
+  background: linear-gradient(180deg, rgba(20, 13, 8, 0.97) 0%, rgba(10, 6, 4, 0.98) 100%);
+  border: 2px solid #6b4324;
+  outline: 1px solid #22150b;
+  outline-offset: -1px;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.95);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-sizing: border-box;
+}
+
+/* Antique Corner Brackets */
+.cnew-panel-left .auth-bracket {
+  position: absolute;
+  color: #c8963e;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.65;
+  pointer-events: none;
+}
+.cnew-panel-left .auth-bracket-tl { top: 5px; left: 5px; }
+.cnew-panel-left .auth-bracket-tr { top: 5px; right: 5px; }
+.cnew-panel-left .auth-bracket-bl { bottom: 5px; left: 5px; }
+.cnew-panel-left .auth-bracket-br { bottom: 5px; right: 5px; }
+
+/* Panel Header Logo */
+.cnew-top-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(132, 93, 43, 0.35);
+  margin-bottom: 2px;
+}
+
+.cnew-top-banner img {
+  height: 32px;
+  width: auto;
+  max-width: 85%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.9));
+}
+
+/* ==========================================================================
+   2. Accordion 5 Elements List (Vertical Slide, Calm Bronze Style)
+   ========================================================================== */
+.cnew-accordion-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cnew-elem-accordion {
+  position: relative;
+  border-radius: 0 !important;
+  background: rgba(18, 12, 7, 0.92);
+  border: 1px solid rgba(132, 93, 43, 0.4);
+  outline: none !important;
+  color: var(--text, #ede4d8);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.2s ease, background 0.2s ease;
+  overflow: hidden;
+}
+
+.cnew-elem-accordion:hover {
+  border-color: #a67238;
+}
+
+.cnew-elem-accordion.expanded {
+  border: 1px solid #9e6d32 !important;
+  outline: none !important;
+  background: rgba(26, 17, 10, 0.98) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Accordion Header */
+.cnew-elem-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 8px;
+  cursor: pointer;
+}
+
+.cnew-ser-hanzi {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 0 !important;
+  border: 1px solid rgba(132, 93, 43, 0.45);
+  background: rgba(8, 5, 3, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'STKaiti', 'KaiTi', 'SimSun', 'Noto Serif SC', serif;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1;
+  text-shadow: none !important;
+}
+
+.cnew-ser-hanzi.hanzi-0 { color: #f4d068; border-color: #845d2b; }
+.cnew-ser-hanzi.hanzi-1 { color: #50c878; border-color: #2e7d48; }
+.cnew-ser-hanzi.hanzi-2 { color: #4aa3df; border-color: #2b618a; }
+.cnew-ser-hanzi.hanzi-3 { color: #ff5744; border-color: #9c2e22; }
+.cnew-ser-hanzi.hanzi-4 { color: #d8a864; border-color: #8a6839; }
+
+.cnew-ser-title {
+  font-weight: bold;
+  font-size: 13px;
+  color: #ede4d8;
+  letter-spacing: 0.4px;
+  flex: 1;
+}
+
+.cnew-elem-accordion.expanded .cnew-ser-title {
+  color: #f3d27a;
+  text-shadow: none !important;
+}
+
+.cnew-elem-arrow {
+  color: #cbb28d;
+  font-size: 10px;
+  transition: transform 0.25s ease;
+  opacity: 0.7;
+}
+
+.cnew-elem-accordion.expanded .cnew-elem-arrow {
+  transform: rotate(180deg);
+  color: #f3d27a;
+  opacity: 1;
+}
+
+/* Accordion Smooth Slide Animation */
+.cnew-elem-body {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: max-height 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+              opacity 0.2s ease,
+              transform 0.2s ease,
+              padding 0.2s ease;
+  padding: 0 8px;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cnew-elem-accordion.expanded .cnew-elem-body {
+  max-height: 360px;
+  opacity: 1;
+  transform: translateY(0);
+  padding: 0 8px 8px 8px;
+  pointer-events: auto;
+}
+
+/* Sect Selector Tabs Row (Flat Wuxia Style with pattern-wind accent) */
+.cnew-sect-tabs-row {
+  display: flex;
+  gap: 6px;
+  padding: 6px 0 4px 0;
+}
+
+.cnew-sect-tab-btn {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(100deg, #20140b, #2d1c10, #20140b) !important;
+  border: 1px solid #4a301a !important;
+  color: #cbb28d !important;
+  cursor: pointer;
+  border-radius: 0 !important;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.2s ease;
+  padding: 0 8px;
+}
+
+.cnew-sect-tab-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../res/img/pattern-wind.svg');
+  background-repeat: no-repeat;
+  background-position: 85% 45%;
+  background-size: 260% auto;
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.cnew-sect-tab-btn:hover {
+  border-color: #845d2b !important;
+  color: #ede4d8 !important;
+}
+
+.cnew-sect-tab-btn.selected-sect {
+  background: linear-gradient(100deg, #9b7940, #c4a369, #a88750) !important;
+  border: 1px solid #d7bc80 !important;
+  color: #161f17 !important;
+  box-shadow: inset 0 0 0 2px rgba(26, 33, 21, 0.18) !important;
+}
+
+.cnew-sect-tab-btn.selected-sect .cnew-sect-tab-title {
+  color: #161f17 !important;
+  font-weight: bold;
+}
+
+.cnew-sect-tab-hanzi {
+  font-family: 'STKaiti', 'KaiTi', 'SimSun', serif;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.cnew-sect-tab-title {
+  font-size: 12.5px;
+  font-weight: bold;
+  letter-spacing: 0.3px;
+}
+
+/* Sect Detail Showcase */
+.cnew-sect-showcase {
+  background: rgba(10, 6, 4, 0.8);
+  border: 1px solid rgba(132, 93, 43, 0.3);
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cnew-showcase-weapon {
+  font-size: 11px;
+  color: #cbb28d;
+  font-weight: 500;
+}
+
+.cnew-showcase-desc {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #a49280;
+  border-top: 1px dashed rgba(132, 93, 43, 0.2);
+  padding-top: 4px;
+}
+
+/* Integrated Stats Grid */
+.cnew-integrated-stats {
+  margin-top: 2px;
+  background: rgba(8, 5, 3, 0.9);
+  border: 1px solid rgba(132, 93, 43, 0.25);
+  padding: 4px 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 10px;
+  font-size: 11px;
+}
+
+.cnew-stat-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cnew-stat-label {
+  color: #8c7b6c;
+}
+
+.cnew-stat-val {
+  color: #f3d27a;
+  font-weight: bold;
+}
+
+/* ==========================================================================
+   3. Bottom Action Controls (Gender, Name, Enter Game & Logout)
+   ========================================================================== */
+.cnew-bottom-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top: 1px solid rgba(132, 93, 43, 0.3);
+  padding-top: 4px;
+}
+
+.cnew-section-title {
+  font-size: 10px;
+  font-weight: bold;
+  color: #8c7b6c;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Gender Row */
+.cnew-sex-row {
+  display: flex;
+  gap: 6px;
+}
+
+/* Name Input */
+.cnew-name-box {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cnew-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.cnew-input-name {
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 0 !important;
+  background: rgba(10, 6, 4, 0.95);
+  border: 1px solid #583716;
+  color: #ede4d8;
+  font-weight: bold;
+  font-size: 13px;
+  font-family: inherit;
+  text-align: center;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.cnew-input-name:focus {
+  border-color: #c8963e;
+  outline: none;
+}
+
+.cnew-warn-text {
+  min-height: 12px;
+  font-size: 10.5px;
+  color: #e0684a;
+  text-align: center;
+}
+
+/* Button Row: Vào giang hồ + Đăng xuất */
+.cnew-btn-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 1px;
+}
+
+.btn-wuxia-primary#ncGo {
+  flex: 1.5;
+  height: 36px;
+  padding: 0 14px;
+}
+
+.btn-wuxia-secondary#ncLogout {
+  flex: 1;
+  height: 36px;
+  padding: 0 12px;
+}
+
+/* ==========================================================================
+   4. Character Entrance & Selection (#csel) Layout & Components
+   ========================================================================== */
+#csel {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1920px !important;
+  height: 1080px !important;
+  max-width: 1920px !important;
+  max-height: 1080px !important;
+  z-index: 99997 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  color: #ede4d8;
+  background: transparent !important;
+  user-select: none;
+  padding: 12px 14px;
+  box-sizing: border-box;
+}
+
+.csel-bg-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.csel-bg-img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 1920px;
+  height: 1080px;
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 92% 88% at 68.75% 46%, #000 62%, rgba(0, 0, 0, 0.6) 82%, transparent 100%);
+  mask-image: radial-gradient(ellipse 92% 88% at 68.75% 46%, #000 62%, rgba(0, 0, 0, 0.6) 82%, transparent 100%);
+}
+
+.csel-bg-blur-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 420px;
+  height: 100%;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: linear-gradient(to left, #090604 15%, rgba(9, 6, 4, 0.9) 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.csel-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(0, 0, 0, 0.12) 0%, rgba(8, 5, 3, 0.72) 55%, rgba(6, 4, 2, 0.98) 100%),
+    linear-gradient(to left, #090604 0%, rgba(9, 6, 4, 0.95) 15%, rgba(9, 6, 4, 0.6) 30%, transparent 50%),
+    linear-gradient(to right, #090604 0%, rgba(9, 6, 4, 0.95) 12%, transparent 30%),
+    linear-gradient(to top, #090604 0%, rgba(9, 6, 4, 0.85) 15%, transparent 35%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.csel-ambient-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.csel-container {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 540px;
+  height: 100%;
+  max-height: 1020px;
+  box-sizing: border-box;
+  gap: 16px;
+  margin: auto;
+}
+
+/* Header */
+.csel-header {
+  text-align: center;
+  flex-shrink: 0;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.csel-logo-img {
+  display: block;
+  width: 280px;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 16px rgba(229, 179, 100, 0.2));
+  pointer-events: none;
+}
+
+.csel-title {
+  display: none !important;
+}
+
+.csel-subtitle {
+  font-size: 12.5px;
+  color: #a8946a;
+  letter-spacing: 2px;
+  margin-top: 4px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* Center Character Stage */
+.csel-center-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.csel-hero-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 540px;
+  overflow: visible;
+}
+
+.csel-hero-img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.92));
+  pointer-events: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  -webkit-mask-image: radial-gradient(circle closest-side at 50% 50%, #000 45%, rgba(0, 0, 0, 0.85) 65%, rgba(0, 0, 0, 0.35) 82%, transparent 96%);
+  mask-image: radial-gradient(circle closest-side at 50% 50%, #000 45%, rgba(0, 0, 0, 0.85) 65%, rgba(0, 0, 0, 0.35) 82%, transparent 96%);
+}
+
+.csel-hero-img.is-sect {
+  max-width: 720px;
+  object-position: 70% bottom;
+}
+
+.csel-hero-img.is-novice {
+  max-width: 540px;
+  object-position: center bottom;
+}
+
+.csel-ped {
+  display: none !important;
+}
+
+.csel-name,
+.csel-sub {
+  display: none !important;
+}
+
+/* Plaque (#csel .cs-panel) */
+#csel .cs-panel {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 480px !important;
+  border-radius: 0 !important;
+  background: rgba(16, 11, 7, 0.96) !important;
+  border: 2px solid #6b4324 !important;
+  box-shadow:
+    0 0 0 1px #22150b,
+    0 20px 48px rgba(0, 0, 0, 0.95) !important;
+  padding: 16px 20px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: visible !important;
+  flex-shrink: 0 !important;
+  margin: 0 auto;
+}
+
+#csel .cs-info {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 5px 14px !important;
+  font-size: 12px !important;
+}
+
+.cs-info-cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(132, 93, 43, 0.2);
+  padding-bottom: 3px;
+}
+
+.cs-info-cell .cs-lbl {
+  color: #8c7b6c;
+  font-size: 11.5px;
+}
+
+.cs-info-cell .cs-val {
+  color: #ede4d8;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+/* Buttons */
+.csel-btn-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: 2px;
+}
+
+.csel-btn-row .btn-wuxia-primary {
+  flex: 1.3;
+  height: 38px;
+  font-size: 13.5px;
+  border-radius: 0 !important;
+}
+
+.csel-btn-row .btn-wuxia-secondary {
+  flex: 1;
+  height: 38px;
+  font-size: 13px;
+  border-radius: 0 !important;
+}
+
+.csel-btn-subrow {
+  display: flex;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.btn-wuxia-del {
+  background: linear-gradient(180deg, #241412, #160c0b);
+  border: 1px solid #4a2420;
+  color: #9d6d67;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 14px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 0;
+}
+
+.btn-wuxia-del:hover {
+  background: linear-gradient(180deg, #381916, #240e0c);
+  border-color: #8c3630;
+  color: #ff9d93;
+}
+
+.btn-wuxia-del-confirm {
+  flex: 1;
+  height: 38px;
+  background: linear-gradient(180deg, #6a2318, #3b120c);
+  border: 1px solid #b2493a;
+  color: #ffded8;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.btn-wuxia-del-confirm:hover {
+  background: linear-gradient(180deg, #852b1e, #4d1810);
+}
+
+.cs-del-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 9, 6, 0.97);
+  backdrop-filter: blur(4px);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 18px;
+  box-sizing: border-box;
+  border: 1px solid #783526;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+}
+
+.cs-del-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.csel-footer-row {
+  display: none !important;
+}
+
+.csel-ghost-btn {
+  display: none !important;
+}
+
+#csel .cs-warn {
+  color: #ff8a70;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 4px 0;
+}
+

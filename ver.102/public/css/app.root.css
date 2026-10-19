@@ -1,0 +1,12 @@
+/**
+ * JX-IDLE Master CSS Root (app.root.css)
+ */
+@import './app.variables.css';
+@import './app.effect.css';
+@import './app.button.css';
+@import './app.wuxia-card.css';
+@import './app.ui_mb.css';
+@import './app.ui_pc.css';
+@import './app.auth.css';
+@import './app.charselect.css';
+@import './app.viewport.css';

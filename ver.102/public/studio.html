@@ -1,0 +1,2516 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JX-Studio · Trình Xem Ngoại Trang, Vòng Sáng, Kỹ Năng & Quái Vật</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="res/fonts/fontawesome.min.css">
+  <style>
+    :root {
+      --bg-dark: #070a0e;
+      --bg-panel: #0f141b;
+      --bg-card: #151c25;
+      --bg-input: #0b1016;
+      --border: #232d3b;
+      --border-gold: #c59b27;
+      --gold: #f2c94c;
+      --gold-dark: #b8860b;
+      --gold-glow: rgba(242, 201, 76, 0.35);
+      --cyan: #38bdf8;
+      --cyan-glow: rgba(56, 189, 248, 0.35);
+      --red: #ef4444;
+      --green: #22c55e;
+      --purple: #a855f7;
+      --text: #e2e8f0;
+      --text-muted: #8b9bb4;
+      --text-dim: #55657e;
+      --font-serif: "Noto Serif", Georgia, serif;
+      --font-cinzel: "Cinzel", "Noto Serif", serif;
+      --font-mono: "Roboto Mono", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      background: var(--bg-dark); color: var(--text);
+      font-family: var(--font-serif); font-size: 13px;
+    }
+
+    #app {
+      display: grid;
+      grid-template-rows: 50px 1fr 44px;
+      grid-template-columns: 430px 1fr;
+      width: 100vw; height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      grid-column: 1 / -1;
+      background: linear-gradient(180deg, #18202b 0%, #10151c 100%);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+      z-index: 50; gap: 12px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--font-cinzel); font-size: 15px; font-weight: 800;
+      color: var(--gold); letter-spacing: 1px; text-shadow: 0 0 12px var(--gold-glow);
+      flex-shrink: 0;
+    }
+    .brand-badge {
+      font-size: 10px; font-family: var(--font-mono); font-weight: 600;
+      background: rgba(242, 201, 76, 0.15); border: 1px solid var(--gold-dark);
+      padding: 2px 6px; border-radius: 4px; color: var(--gold);
+    }
+
+    /* CUSTOM RES PATH BAR */
+    .header-res-box {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border);
+      padding: 3px 8px; border-radius: 6px; flex: 1; max-width: 480px;
+    }
+    .res-label {
+      font-size: 11px; font-family: var(--font-mono); color: var(--gold);
+      font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 4px;
+    }
+    .res-input {
+      flex: 1; background: #070a0e; border: 1px solid #232e3d;
+      border-radius: 4px; color: #e2e8f0; font-size: 11.5px;
+      font-family: var(--font-mono); padding: 4px 8px; outline: none;
+    }
+    .res-input:focus { border-color: var(--gold); }
+
+    .header-stats {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .stat-pill {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--bg-card); padding: 4px 8px; border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+    .stat-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+    .header-actions {
+      display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(180deg, #1f2835 0%, #161e29 100%);
+      border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text); padding: 5px 12px; font-size: 12px;
+      font-family: var(--font-serif); cursor: pointer; transition: all 0.15s;
+    }
+    .btn:hover {
+      background: linear-gradient(180deg, #2a3647 0%, #1f2835 100%);
+      border-color: var(--gold); color: #fff;
+    }
+    .btn-gold {
+      background: linear-gradient(180deg, #f2c94c 0%, #d4a017 100%);
+      border-color: #ffd700; color: #1a1202; font-weight: 700;
+      box-shadow: 0 2px 8px rgba(242, 201, 76, 0.25);
+    }
+    .btn-gold:hover {
+      background: linear-gradient(180deg, #ffd866 0%, #e5b020 100%);
+      color: #000; box-shadow: 0 3px 12px rgba(242, 201, 76, 0.4);
+    }
+    .btn-danger {
+      background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+      border-color: #f87171; color: #fff;
+    }
+    .btn-danger:hover {
+      background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+    }
+
+    /* SIDEBAR */
+    aside {
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      overflow: hidden; z-index: 40;
+    }
+    .nav-tabs {
+      display: flex; background: #0a0d12; border-bottom: 1px solid var(--border);
+      padding: 4px 4px 0 4px; gap: 3px; overflow-x: auto;
+    }
+    .nav-tab {
+      flex: 1; min-width: 72px; text-align: center;
+      padding: 8px 4px; font-size: 11.5px; font-weight: 600;
+      background: transparent; border: 1px solid transparent; border-bottom: none;
+      border-radius: 6px 6px 0 0; color: var(--text-muted);
+      cursor: pointer; transition: all 0.15s; white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .nav-tab.active {
+      background: var(--bg-panel); color: var(--gold);
+      border-color: var(--border); border-top: 2px solid var(--gold);
+    }
+    .tab-content {
+      flex: 1; overflow-y: auto; padding: 12px;
+      display: none; flex-direction: column; gap: 12px;
+    }
+    .tab-content.active { display: flex; }
+
+    /* FORM ELEMENTS & CARDS */
+    .section-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .section-title {
+      font-size: 11px; font-weight: 700; color: var(--gold);
+      text-transform: uppercase; letter-spacing: 0.8px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;
+    }
+    .form-group {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .form-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    }
+    label {
+      font-size: 11px; color: var(--text-muted); font-weight: 600;
+    }
+    select, input[type="text"], input[type="number"], input[type="search"] {
+      width: 100%; background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); padding: 6px 8px; font-size: 12px;
+      font-family: inherit; outline: none; transition: border-color 0.15s;
+    }
+    select:focus, input:focus { border-color: var(--gold); }
+    .range-wrap {
+      display: flex; align-items: center; gap: 8px;
+    }
+    input[type="range"] {
+      flex: 1; accent-color: var(--gold); height: 4px; background: #222c38; border-radius: 2px;
+    }
+    .range-val {
+      font-family: var(--font-mono); font-size: 11px; color: var(--cyan); min-width: 36px; text-align: right;
+    }
+
+    /* ACTION PILLS */
+    .pill-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+    }
+    .pill-btn {
+      background: var(--bg-input); border: 1px solid var(--border);
+      color: var(--text-muted); padding: 6px 4px; border-radius: 6px;
+      font-size: 11px; text-align: center; cursor: pointer; transition: all 0.12s;
+    }
+    .pill-btn:hover { background: #1c2532; color: var(--text); border-color: #3b4859; }
+    .pill-btn.active {
+      background: rgba(242, 201, 76, 0.15); border-color: var(--gold);
+      color: var(--gold); font-weight: 700;
+    }
+
+    /* COMPASS / DIRECTION DIAL */
+    .compass-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; width: 140px; margin: 0 auto;
+    }
+    .compass-btn {
+      width: 42px; height: 32px; background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 4px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);
+    }
+    .compass-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+    .compass-btn.active { background: rgba(56, 189, 248, 0.2); border-color: var(--cyan); color: #fff; font-weight: 700; }
+
+    /* ITEM & MONSTER LIST */
+    .item-list, .monster-list, .fx-list {
+      max-height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px;
+      background: var(--bg-input); border: 1px solid var(--border); border-radius: 6px; padding: 4px;
+    }
+    .list-item {
+      display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 4px;
+      background: rgba(255,255,255,0.02); cursor: pointer; transition: all 0.1s;
+    }
+    .list-item:hover { background: rgba(242, 201, 76, 0.1); }
+    .list-item.selected {
+      background: rgba(242, 201, 76, 0.18); border-left: 3px solid var(--gold);
+    }
+    .list-thumb {
+      width: 32px; height: 32px; border-radius: 4px; background: #000;
+      border: 1px solid var(--border); object-fit: contain; flex-shrink: 0;
+    }
+    .list-info { flex: 1; overflow: hidden; }
+    .list-title {
+      font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .list-sub {
+      font-size: 10.5px; color: var(--text-muted); font-family: var(--font-mono);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* CANVAS VIEWPORT */
+    main {
+      position: relative; width: 100%; height: 100%; overflow: hidden;
+      background: #05070a; cursor: default;
+    }
+    #stage {
+      position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+    }
+    .viewport-overlay {
+      position: absolute; top: 12px; right: 12px; display: flex; flex-direction: column; gap: 8px;
+      z-index: 20; pointer-events: none;
+    }
+    .viewport-tools {
+      display: flex; gap: 6px; pointer-events: auto; background: rgba(17, 22, 29, 0.85);
+      backdrop-filter: blur(8px); padding: 6px; border-radius: 8px; border: 1px solid var(--border);
+    }
+    .tool-btn {
+      width: 32px; height: 32px; border-radius: 6px; background: var(--bg-card);
+      border: 1px solid var(--border); color: var(--text); display: flex; align-items: center;
+      justify-content: center; cursor: pointer; font-size: 13px; transition: all 0.12s;
+    }
+    .tool-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .tool-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
+
+    /* FLOATING SKILL HOTBAR */
+    .skill-hotbar {
+      position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 8px; background: rgba(13, 18, 25, 0.9);
+      backdrop-filter: blur(10px); padding: 8px 14px; border-radius: 12px;
+      border: 1px solid var(--border-gold); box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+      z-index: 30;
+    }
+    .skill-slot {
+      position: relative; width: 48px; height: 48px; border-radius: 8px;
+      background: #0b0f15; border: 1px solid #334155; display: flex;
+      flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .skill-slot:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 4px 12px var(--gold-glow); }
+    .skill-slot:active { transform: translateY(0); }
+    .skill-slot img { width: 34px; height: 34px; border-radius: 4px; object-fit: contain; }
+    .skill-slot .key-badge {
+      position: absolute; top: -6px; left: -4px; background: var(--gold);
+      color: #000; font-family: var(--font-mono); font-size: 10px; font-weight: 800;
+      padding: 1px 5px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .skill-slot .slot-name {
+      font-size: 8.5px; color: var(--text-muted); margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 44px;
+    }
+
+    /* CONTROL HINT PILL */
+    .control-hint {
+      position: absolute; bottom: 16px; left: 16px; background: rgba(11, 15, 21, 0.85);
+      border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px;
+      font-size: 11px; color: var(--text-muted); backdrop-filter: blur(6px);
+      pointer-events: none; z-index: 20;
+    }
+
+    /* SELECTED ENTITY HUD CARD */
+    .entity-hud {
+      position: absolute; top: 16px; left: 16px; background: rgba(17, 22, 29, 0.92);
+      backdrop-filter: blur(10px); border: 1px solid var(--border-gold); border-radius: 8px;
+      padding: 10px 14px; min-width: 250px; z-index: 20; display: none; flex-direction: column; gap: 6px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
+    .entity-hud.show { display: flex; }
+    .hud-title {
+      font-size: 13px; font-weight: 700; color: var(--gold); display: flex; justify-content: space-between;
+    }
+    .hud-desc { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+    .hud-actions { display: flex; gap: 6px; margin-top: 4px; }
+
+    /* FOOTER */
+    footer {
+      grid-column: 1 / -1;
+      background: #090c10; border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; font-size: 11.5px; color: var(--text-muted); z-index: 50;
+    }
+    .timeline-controls {
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    /* TOAST ALERT */
+    #toast {
+      position: fixed; top: 60px; right: 20px; z-index: 999;
+      background: rgba(22, 29, 38, 0.95); border: 1px solid var(--gold);
+      color: #fff; padding: 8px 14px; border-radius: 6px; font-size: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5); transform: translateY(-20px);
+      opacity: 0; pointer-events: none; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-input); }
+    ::-webkit-scrollbar-thumb { background: #263342; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3b4e63; }
+  </style>
+</head>
+<body>
+  <div id="toast">Thông báo</div>
+
+  <div id="app">
+    <!-- HEADER -->
+    <header>
+      <div class="brand">
+        <span>⚔ JX STUDIO</span>
+        <span class="brand-badge">WORKBENCH HD</span>
+      </div>
+
+      <!-- CUSTOM RES LOADER BAR -->
+      <div class="header-res-box">
+        <span class="res-label"><i class="fa-solid fa-folder-tree"></i> RES:</span>
+        <input type="text" id="customResInput" class="res-input" placeholder="Mặc định: /res/ (Nhập URL hoặc đường dẫn mở rộng...)">
+        <button class="btn btn-gold" id="btnApplyRes" style="padding:3px 8px;font-size:11px;" title="Cập nhật đường dẫn tài nguyên">Nạp RES</button>
+      </div>
+
+      <div class="header-stats">
+        <div class="stat-pill"><span class="dot"></span><span id="statAssets">Assets: Đang nạp...</span></div>
+        <div class="stat-pill">FPS: <span id="statFps" style="color:var(--cyan);font-weight:600;">60</span></div>
+        <div class="stat-pill">Thực thể: <span id="statEntities" style="color:var(--gold);font-weight:600;">0</span></div>
+        <div class="stat-pill">Zoom: <span id="statZoom" style="color:#fff;">100%</span></div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn" id="btnResetCam" title="Căn lại trung tâm (0, 0)">🎯 Tâm Đài</button>
+        <button class="btn btn-danger" id="btnClearStage" title="Xóa hết mọi quái trên sàn">🗑 Xóa Quái</button>
+        <a href="/" class="btn btn-gold" style="text-decoration:none;">🎮 Vào Game</a>
+      </div>
+    </header>
+
+    <!-- SIDEBAR CONTROLS -->
+    <aside>
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="tabDoll">👤 Doll</button>
+        <button class="nav-tab" data-tab="tabAura">💫 Vòng Sáng</button>
+        <button class="nav-tab" data-tab="tabFx">💥 Skill FX</button>
+        <button class="nav-tab" data-tab="tabEquip">🗡 Trang Bị</button>
+        <button class="nav-tab" data-tab="tabMonster">👹 Quái Vật</button>
+      </nav>
+
+      <!-- TAB 1: DOLL STUDIO -->
+      <div class="tab-content active" id="tabDoll">
+        <div class="section-card">
+          <div class="section-title">
+            <span>Nhân Vật (Doll Model)</span>
+            <span id="dollRowSummary" style="font-family:var(--font-mono);font-size:10px;color:var(--cyan);">W:0 A:19 H:19</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Giới tính</label>
+              <select id="dollSex">
+                <option value="m">Nam (Man)</option>
+                <option value="f">Nữ (Woman)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Môn phái</label>
+              <select id="dollFac">
+                <option value="shaolin">Thiếu Lâm</option>
+                <option value="tianwang">Thiên Vương</option>
+                <option value="tangmen">Đường Môn</option>
+                <option value="wudu">Ngũ Độc</option>
+                <option value="emei">Nga Mi</option>
+                <option value="cuiyan">Thúy Yên</option>
+                <option value="gaibang">Cái Bang</option>
+                <option value="tianren">Thiên Nhẫn</option>
+                <option value="wudang">Võ Đang</option>
+                <option value="kunlun">Côn Lôn</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Ngoại trang mẫu / Bộ trang bị</label>
+            <select id="dollPreset">
+              <option value="tanthu">Tân Thủ (Đồ sơ cấp)</option>
+              <option value="wear0">Ngoại Trang Cấp 1</option>
+              <option value="wear1" selected>Ngoại Trang Cấp 2</option>
+              <option value="wear2">Ngoại Trang Cấp 3</option>
+              <option value="sect">Hoàng Kim Môn Phái</option>
+              <option value="kim_o">Bộ Kim Ô</option>
+              <option value="bach_ho">Bộ Bạch Hổ</option>
+              <option value="xich_lan">Bộ Xích Lân</option>
+              <option value="minh_phuong">Bộ Minh Phượng</option>
+              <option value="dang_long">Bộ Đằng Long</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Loại vũ khí (1 tay / 2 tay)</label>
+            <select id="dollWeaponType">
+              <option value="kiem">Kiếm (1 tay)</option>
+              <option value="dao">Đao (1 tay)</option>
+              <option value="con">Côn (Trường côn)</option>
+              <option value="thuong">Thương (Trường thương)</option>
+              <option value="songchuy">Song Chùy (2 tay)</option>
+              <option value="songdao">Song Đao (2 tay)</option>
+              <option value="quyen">Quyền Sáo (Tay không)</option>
+              <option value="amkhi">Ám Khí (Phi đao / Tiêu)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <div style="display:flex;justify-content:space-between;">
+              <label>Chỉ số Vũ khí (Weapon Row: 0..134)</label>
+              <span class="range-val" id="valWepRow">0</span>
+            </div>
+            <div class="range-wrap">
+              <input type="range" id="dollWepRow" min="0" max="134" value="0">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div style="display:flex;justify-content:space-between;">
+              <label>Chỉ số Áo giáp (Armor Row: 0..69)</label>
+              <span class="range-val" id="valArmorRow">19</span>
+            </div>
+            <div class="range-wrap">
+              <input type="range" id="dollArmorRow" min="0" max="69" value="19">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div style="display:flex;justify-content:space-between;">
+              <label>Chỉ số Mũ nón (Helm Row: 0..43)</label>
+              <span class="range-val" id="valHelmRow">19</span>
+            </div>
+            <div class="range-wrap">
+              <input type="range" id="dollHelmRow" min="0" max="43" value="19">
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-title">Hành Động & Hướng (Action & Dir)</div>
+          
+          <div class="pill-grid">
+            <button class="pill-btn active" data-act="st">Đứng (Stand)</button>
+            <button class="pill-btn" data-act="run">Chạy (Run)</button>
+            <button class="pill-btn" data-act="at">Đánh (Atk)</button>
+            <button class="pill-btn" data-act="mag">Phép (Mag)</button>
+            <button class="pill-btn" data-act="hurt">Bị Đánh</button>
+            <button class="pill-btn" data-act="die">Tử Trận</button>
+          </div>
+
+          <div class="form-group" style="margin-top:4px;">
+            <label style="text-align:center;display:block;">Hướng Quay (8 Hướng)</label>
+            <div class="compass-grid">
+              <div class="compass-btn" data-dir="7">NW</div>
+              <div class="compass-btn" data-dir="0">N</div>
+              <div class="compass-btn" data-dir="1">NE</div>
+              <div class="compass-btn" data-dir="6">W</div>
+              <div class="compass-btn active" data-dir="center" id="btnAutoRotate" title="Tự động xoay tròn">🔄</div>
+              <div class="compass-btn" data-dir="2">E</div>
+              <div class="compass-btn" data-dir="5">SW</div>
+              <div class="compass-btn" data-dir="4">S</div>
+              <div class="compass-btn" data-dir="3">SE</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div style="display:flex;justify-content:space-between;">
+              <label>Tỉ lệ vẽ Doll (Scale)</label>
+              <span class="range-val" id="valDollScale">1.55x</span>
+            </div>
+            <div class="range-wrap">
+              <input type="range" id="dollScale" min="0.8" max="2.6" step="0.05" value="1.55">
+            </div>
+          </div>
+
+          <div style="display:flex;gap:6px;margin-top:6px;">
+            <button class="btn btn-gold" id="btnSpawnDoll" style="flex:1;">✨ Spawn Lại Doll</button>
+            <button class="btn" id="btnSpawnDuo" title="Spawn cặp đôi Nam & Nữ">👥 Cặp Đôi</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: VÒNG SÁNG (AURAS & HALOS) -->
+      <div class="tab-content" id="tabAura">
+        <div class="section-card">
+          <div class="section-title">
+            <span>Thiết Lập Vòng Sáng</span>
+            <label style="display:flex;align-items:center;gap:4px;cursor:pointer;">
+              <input type="checkbox" id="auraEnable" checked> Bật
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>Mẫu Vòng Sáng Thần Khí</label>
+            <select id="auraPreset">
+              <option value="hoang_kim">1. Hoàng Kim Lôi Quang (Kim Sắc)</option>
+              <option value="bach_kim">2. Bạch Kim Băng Phách (Hàn Lam)</option>
+              <option value="xich_lan">3. Xích Lân Liệt Diệm (Hỏa Thần)</option>
+              <option value="minh_phuong">4. Minh Phượng Tử Quang (Phượng Hoàng)</option>
+              <option value="dang_long">5. Đằng Long Thanh Khí (Thần Long)</option>
+              <option value="ngu_sac">6. Ngũ Sắc Tương Sinh (Ngũ Hành)</option>
+              <option value="thai_cuc">7. Thái Cực Trận Đồ (Võ Đang Âm Dương)</option>
+              <option value="phat_quang">8. Phật Quang Liên Hoa (Nga Mi / Thiếu Lâm)</option>
+              <option value="tu_la">9. Tu La Huyết Khí (Huyết Sát Hắc Ám)</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Màu Chính (Chủ đạo)</label>
+              <input type="color" id="auraColor1" value="#ffd700" style="height:34px;padding:2px;cursor:pointer;">
+            </div>
+            <div class="form-group">
+              <label>Màu Phụ (Hào quang)</label>
+              <input type="color" id="auraColor2" value="#ff8c00" style="height:34px;padding:2px;cursor:pointer;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div style="display:flex;justify-content:space-between;">
+              <label>Bán kính vòng sáng (Radius)</label>
+              <span class="range-val" id="valAuraRadius">42px</span>
+            </div>
+            <div class="range-wrap">
+              <input type="range" id="auraRadius" min="20" max="90" value="42">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div style="display:flex;justify-content:space-between;">
+              <label>Tốc độ quay</label>
+              <span class="range-val" id="valAuraSpeed">1.0x</span>
+            </div>
+            <div class="range-wrap">
+              <input type="range" id="auraSpeed" min="0.2" max="3.0" step="0.1" value="1.0">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" id="auraParticles" checked> Bụi Khí & Hạt Sáng Bốc Lên (Rising Sparks)
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" id="auraPillar" checked> Cột Khí Quang Rực Rỡ (Pillar of Qi)
+            </label>
+          </div>
+
+          <button class="btn btn-gold" id="btnApplyAuraToSelected" style="margin-top:6px;">Áp Dụng Cho Doll / Thực Thể Đang Chọn</button>
+        </div>
+      </div>
+
+      <!-- TAB 3: SKILL FX & MISSILES -->
+      <div class="tab-content" id="tabFx">
+        <div class="section-card">
+          <div class="section-title">Chiêu Thức & Hiệu Ứng (Skill FX)</div>
+
+          <div class="form-group">
+            <label>Tìm kiếm hiệu ứng</label>
+            <input type="search" id="fxSearch" placeholder="Lọc mã số FX (vd: 1, 3, 11, 14...)">
+          </div>
+
+          <div class="fx-list" id="fxListContainer">
+            <!-- Dynamic FX Items -->
+          </div>
+
+          <div class="form-row" style="margin-top:6px;">
+            <button class="btn btn-gold" id="btnFireSkill">🔥 Bắn Chiêu Đang Chọn</button>
+            <button class="btn" id="btnLoopFxAtCenter">🔁 Nổ Tại Tâm Đài</button>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-title">Kiểm Soát Từng Khung Hình</div>
+          <div class="form-group">
+            <div style="display:flex;justify-content:space-between;">
+              <label>Tốc độ bay / chạy FX</label>
+              <span class="range-val" id="valFxSpeed">1.0x</span>
+            </div>
+            <div class="range-wrap">
+              <input type="range" id="fxSpeed" min="0.2" max="2.0" step="0.1" value="1.0">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: TRANG BỊ & HOÀNG KIM -->
+      <div class="tab-content" id="tabEquip">
+        <div class="section-card">
+          <div class="section-title">Thư Viện Trang Bị Hoàng Kim</div>
+
+          <div class="form-group">
+            <label>Tìm kiếm trang bị</label>
+            <input type="search" id="equipSearch" placeholder="Nhập tên trang bị (vd: Mộng Long, Phục Ma, Định Quốc...)">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Loại trang bị</label>
+              <select id="equipKind">
+                <option value="all">Tất cả trang bị</option>
+                <option value="weapon">Vũ Khí (Weapon)</option>
+                <option value="armor">Áo Giáp (Armor)</option>
+                <option value="helm">Mũ Nón (Helm)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Bộ Thần Khí</label>
+              <select id="equipSetTier">
+                <option value="all">Tất cả các bộ</option>
+                <option value="monphai">Hoàng Kim Môn Phái</option>
+                <option value="dinhquoc">Định Quốc / Kim Phong</option>
+                <option value="kimo">Kim Ô / Bạch Hổ</option>
+                <option value="xichlan">Xích Lân / Minh Phượng</option>
+                <option value="danglong">Đằng Long Thần Khí</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="item-list" id="equipListContainer">
+            <!-- Dynamic Equip Items -->
+          </div>
+
+          <button class="btn btn-gold" id="btnEquipToDoll" style="margin-top:6px;">Mặc Ngay Lên Doll Đang Chọn</button>
+        </div>
+      </div>
+
+      <!-- TAB 5: QUÁI VẬT & NPC -->
+      <div class="tab-content" id="tabMonster">
+        <div class="section-card">
+          <div class="section-title">Danh Sách Quái Vật & Boss (110+)</div>
+
+          <div class="form-group">
+            <label>Tìm quái vật / NPC</label>
+            <input type="search" id="monSearch" placeholder="Nhập tên quái (vd: Hổ, Heo rừng, Độc xà, Sát thủ...)">
+          </div>
+
+          <div class="monster-list" id="monListContainer">
+            <!-- Dynamic Monster Items -->
+          </div>
+
+          <div class="form-row" style="margin-top:6px;">
+            <div class="form-group">
+              <label>Số lượng</label>
+              <select id="monSpawnCount">
+                <option value="1">1 Con đơn lẻ</option>
+                <option value="2">2 Con song hành</option>
+                <option value="3">3 Con quây quanh</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Phẩm chất</label>
+              <select id="monQuality">
+                <option value="normal">Quái thường (Tuần tra)</option>
+                <option value="boss">Boss Hoàng Kim (To x1.4)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:6px;margin-top:6px;">
+            <button class="btn btn-gold" id="btnSpawnMon" style="flex:1;">👹 Spawn Quái Vật</button>
+            <button class="btn" id="btnSpawnDummy">🎯 Spawn Bia Gỗ</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER STAGE CANVAS -->
+    <main id="viewport">
+      <canvas id="stage"></canvas>
+
+      <div class="viewport-overlay">
+        <div class="viewport-tools">
+          <button class="tool-btn" id="btnZoomIn" title="Phóng to (+)">➕</button>
+          <button class="tool-btn" id="btnZoomOut" title="Thu nhỏ (-)">➖</button>
+          <button class="tool-btn" id="btnToggleGrid" title="Bật/Tắt Lưới toạ độ">📏</button>
+          <button class="tool-btn" id="btnToggleFloor" title="Đổi mặt đá sàn võ đài">🧱</button>
+          <button class="tool-btn" id="btnToggleShadow" title="Bật/Tắt bóng đổ">👥</button>
+          <button class="tool-btn" id="btnScreenshot" title="Chụp ảnh sàn đấu (PNG)">📷</button>
+        </div>
+      </div>
+
+      <!-- FLOATING SKILL HOTBAR -->
+      <div class="skill-hotbar" id="skillHotbar">
+        <div class="skill-slot" data-fx="1" data-sk="10" title="[Phím 1] Kim Cang Phục Ma (FX #1)">
+          <span class="key-badge">1</span>
+          <img src="img/s/10.png" onerror="this.src='res/icons/skills/10.png'">
+          <span class="slot-name">Phục Ma</span>
+        </div>
+        <div class="skill-slot" data-fx="3" data-sk="57" title="[Phím 2] Băng Phách Hàn Quang (FX #3)">
+          <span class="key-badge">2</span>
+          <img src="img/s/57.png" onerror="this.src='res/icons/skills/57.png'">
+          <span class="slot-name">Băng Phách</span>
+        </div>
+        <div class="skill-slot" data-fx="11" data-sk="30" title="[Phím 3] Hồi Phong Lạc Nhạn (FX #11)">
+          <span class="key-badge">3</span>
+          <img src="img/s/30.png" onerror="this.src='res/icons/skills/30.png'">
+          <span class="slot-name">Hồi Phong</span>
+        </div>
+        <div class="skill-slot" data-fx="8" data-sk="11" title="[Phím 4] Hoành Tảo Lục Hợp (FX #8)">
+          <span class="key-badge">4</span>
+          <img src="img/s/11.png" onerror="this.src='res/icons/skills/11.png'">
+          <span class="slot-name">Lục Hợp</span>
+        </div>
+        <div class="skill-slot" data-fx="14" data-sk="14" title="[Phím 5] Hàng Long Bất Vũ (FX #14)">
+          <span class="key-badge">5</span>
+          <img src="img/s/14.png" onerror="this.src='res/icons/skills/14.png'">
+          <span class="slot-name">Hàng Long</span>
+        </div>
+      </div>
+
+      <!-- CONTROL HINT PILL -->
+      <div class="control-hint">
+        🎮 Di chuyển: Click chuột hoặc phím <strong>WASD</strong> · Chiêu thức: Phím <strong>1..5</strong> · Kéo chuột để pan góc nhìn
+      </div>
+
+      <!-- SELECTED ENTITY HUD CARD -->
+      <div class="entity-hud" id="entityHud">
+        <div class="hud-title">
+          <span id="hudEntityName">Tên Thực Thể</span>
+          <span id="hudEntityId" style="font-family:var(--font-mono);font-size:11px;color:var(--cyan);">#1</span>
+        </div>
+        <div class="hud-desc" id="hudEntityDesc">Doll (Nam) · Thiếu Lâm · Kiếm #1</div>
+        <div class="hud-actions">
+          <button class="btn" id="btnHudAttack" style="padding:3px 8px;font-size:11px;">⚔ Đánh Thử</button>
+          <button class="btn" id="btnHudRotate" style="padding:3px 8px;font-size:11px;">🔄 Đổi Hướng</button>
+          <button class="btn btn-danger" id="btnHudDelete" style="padding:3px 8px;font-size:11px;">❌ Xóa</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER TIMELINE & CONTROLS -->
+    <footer>
+      <div class="timeline-controls">
+        <button class="btn" id="btnPlayPause" style="padding:4px 10px;">⏸ Tạm Dừng</button>
+        <button class="btn" id="btnStepBack" style="padding:4px 8px;">⏮</button>
+        <button class="btn" id="btnStepForward" style="padding:4px 8px;">⏭</button>
+        <span style="font-family:var(--font-mono);font-size:11px;">Thời gian: <span id="timeDisplay" style="color:var(--cyan);">0.00s</span></span>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span>Mặt sàn: <strong id="lblCurrentFloor" style="color:var(--gold);">Đá Lát Võ Đài (Paving)</strong></span>
+        <span>Võ đài kích thước chuẩn: <strong style="color:var(--cyan);">880 x 560 px</strong></span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- LOAD JX GAME ENGINE LIBRARIES -->
+  <script src="core/data/doll_res.js"></script>
+  <script src="core/engine/doll_renderer.js"></script>
+  <script src="core/data/anim_monsters.js"></script>
+  <script src="core/data/effects.js"></script>
+  <script src="core/data/monsters.js"></script>
+  <script src="core/data/gear_magic.js"></script>
+  <script src="core/data/gear_base.js"></script>
+  <script src="core/data/gear_blue.js"></script>
+  <script src="core/data/gear_purple.js"></script>
+  <script src="core/data/gear_gold.js"></script>
+  <script src="core/data/gear_platina.js"></script>
+  <script src="core/data/skills.js"></script>
+
+  <!-- STUDIO CLIENT CONTROLLER -->
+  <script>
+  (function() {
+    "use strict";
+
+    // 1. FACTIONS & WEAPON DEFS
+    const FACTIONS = {
+      shaolin:  { name: "Thiếu Lâm",   defWep: "con",      wears: [1, 2, 3],    hkHelm: 20, hkArmor: 21, hkWep: 26 },
+      tianwang: { name: "Thiên Vương", defWep: "thuong",   wears: [13, 14, 15], hkHelm: 23, hkArmor: 24, hkWep: 24 },
+      tangmen:  { name: "Đường Môn",   defWep: "amkhi",    wears: [7, 8, 9],    hkHelm: 25, hkArmor: 26, hkWep: 19 },
+      wudu:     { name: "Ngũ Độc",     defWep: "dao",      wears: [19, 20, 10], hkHelm: 24, hkArmor: 25, hkWep: 22 },
+      emei:     { name: "Nga Mi",      defWep: "kiem",     wears: [4, 5, 6],    hkHelm: 21, hkArmor: 22, hkWep: 20 },
+      cuiyan:   { name: "Thúy Yên",    defWep: "songdao",  wears: [19, 20, 6],  hkHelm: 22, hkArmor: 23, hkWep: 28 },
+      gaibang:  { name: "Cái Bang",    defWep: "con",      wears: [10, 11, 12], hkHelm: 26, hkArmor: 27, hkWep: 27 },
+      tianren:  { name: "Thiên Nhẫn",  defWep: "thuong",   wears: [7, 8, 9],    hkHelm: 27, hkArmor: 28, hkWep: 25 },
+      wudang:   { name: "Võ Đang",     defWep: "kiem",     wears: [16, 17, 18], hkHelm: 28, hkArmor: 29, hkWep: 21 },
+      kunlun:   { name: "Côn Lôn",     defWep: "dao",      wears: [4, 5, 6],    hkHelm: 29, hkArmor: 30, hkWep: 23 }
+    };
+
+    const WEAPON_DEFS = {
+      kiem:     { name: "Kiếm (1 tay)",                 rows: [1, 2, 3, 20, 21] },
+      dao:      { name: "Đao (1 tay)",                  rows: [4, 5, 6, 22, 23] },
+      con:      { name: "Côn (Trường côn)",             rows: [10, 11, 12, 26, 27] },
+      thuong:   { name: "Thương (Trường thương)",       rows: [7, 8, 9, 24, 25] },
+      songchuy: { name: "Song Chùy (2 tay)",            rows: [16, 17, 18, 30, 31] },
+      songdao:  { name: "Song Đao (2 tay)",             rows: [13, 14, 15, 28, 29] },
+      quyen:    { name: "Quyền sáo (Tay không)",        rows: [0, 0, 0, 0, 0] },
+      amkhi:    { name: "Ám khí (Phi đao / Tiêu)",      rows: [19, 19, 19, 19, 19] }
+    };
+
+    // 2. RESOURCE BASE URL RESOLVER
+    let customResBase = localStorage.getItem("jx_studio_custom_res") || "";
+    const elResInput = document.getElementById("customResInput");
+    if (elResInput) elResInput.value = customResBase;
+
+    function resolveResPath(rawPath) {
+      if (!rawPath) return "";
+      if (/^https?:\/\/|^\/\/|^data:/i.test(rawPath)) return rawPath;
+      let p = rawPath.replace(/^\/+/, "");
+
+      if (customResBase && customResBase.trim()) {
+        const base = customResBase.trim().replace(/\/+$/, "");
+        if (base.endsWith("/res") || base === "res") {
+          if (p.startsWith("doll/")) p = "models/characters/" + p;
+          else if (p.startsWith("img/char/")) p = "models/monsters/" + p.substring(9);
+          else if (p.startsWith("fx/")) p = "models/effects/" + p.substring(3);
+          else if (p.startsWith("img/m/")) p = "icons/monsters/" + p.substring(6);
+          else if (p.startsWith("img/s/")) p = "icons/skills/" + p.substring(6);
+          else if (p.startsWith("img/i/")) p = "icons/items/" + p.substring(6);
+        }
+        return `${base}/${p}`;
+      }
+      return p;
+    }
+
+    // 3. IMAGE CACHE ENGINE
+    const imgCache = new Map();
+    function getImg(src) {
+      if (!src) return null;
+      const fullSrc = resolveResPath(src);
+      let im = imgCache.get(fullSrc);
+      if (!im) {
+        im = new Image();
+        im.decoding = "async";
+        im.crossOrigin = "anonymous";
+        im.src = fullSrc;
+        imgCache.set(fullSrc, im);
+      }
+      return im;
+    }
+    function isImgReady(im) {
+      return !!(im && im.complete && im.naturalWidth > 0);
+    }
+
+    // Connect to doll.js image resolver bridge
+    window.m0 = function(src) {
+      return getImg(src);
+    };
+
+    // Math Angle Helpers
+    const P8 = (dx, dy) => ((Math.round(Math.atan2(-dx, dy) / (Math.PI / 4)) % 8) + 8) % 8;
+    const M5 = (dx, dy) => ((Math.round(Math.atan2(-dx, dy) / (Math.PI / 8)) % 16) + 16) % 16;
+
+    // 4. CANVAS & CAMERA STATE
+    const canvas = document.getElementById("stage");
+    const ctx = canvas.getContext("2d");
+    let viewW = 0, viewH = 0;
+    let camX = 0, camY = 0;
+    let camZoom = 1.0;
+    let isPanning = false;
+    let panStartX = 0, panStartY = 0;
+    let isPlaying = true;
+    let animTime = 0;
+    let lastStamp = performance.now();
+    let fpsCount = 0, fpsTimer = 0;
+    let autoRotate = false;
+
+    // ARENA BOUNDS (Compact, bounded martial arts stage)
+    const ARENA = { x: -440, y: -280, w: 880, h: 560, r: 24 };
+
+    // Viewport Options
+    let showGrid = true;
+    let showShadow = true;
+    let floorMode = 0; // 0: paving, 1: dirt, 2: grass, 3: dark grid, 4: transparent
+    const FLOOR_NAMES = ["Đá Lát Võ Đài (Paving)", "Bãi Đất Nện (Dirt)", "Thảm Cỏ Xanh (Grass)", "Lưới Tọa Độ (Dark Grid)", "Trong Suốt (None)"];
+    const FLOOR_SRCS = ["res/models/arena/paving.webp", "res/models/arena/dirt.webp", "res/models/arena/grass.webp", null, null];
+
+    // Entity Management
+    let entities = [];
+    let heroDoll = null;
+    let selectedEntity = null;
+    let nextEntityId = 1;
+    let draggedEntity = null;
+    let dragOffset = { x: 0, y: 0 };
+    let floatingCombatTexts = [];
+    let activeMissiles = [];
+    let activeExplosions = [];
+    let clickRipples = [];
+
+    // Keyboard Movement State
+    const keysDown = { w: false, a: false, s: false, d: false, up: false, down: false, left: false, right: false };
+
+    // TOAST
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2200);
+    }
+
+    // RESIZE CANVAS
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      viewW = canvas.width = rect.width;
+      viewH = canvas.height = rect.height;
+    }
+    window.addEventListener("resize", resizeCanvas);
+
+    // SCREEN TO WORLD & WORLD TO SCREEN
+    function worldToScreen(wx, wy) {
+      return {
+        x: viewW * 0.5 + (wx - camX) * camZoom,
+        y: viewH * 0.5 + (wy - camY) * camZoom
+      };
+    }
+    function screenToWorld(sx, sy) {
+      return {
+        x: camX + (sx - viewW * 0.5) / camZoom,
+        y: camY + (sy - viewH * 0.5) / camZoom
+      };
+    }
+
+    // 5. AURA RENDER ENGINE
+    function drawAura(c, x, y, auraCfg, t, scale) {
+      if (!auraCfg || !auraCfg.enabled) return;
+      const baseR = (auraCfg.radius || 42) * (scale || 1.0);
+      const pulse = Math.sin(t * 3.5 * (auraCfg.speed || 1.0)) * 3;
+      const r = Math.max(12, baseR + pulse);
+      const col1 = auraCfg.color1 || "#ffd700";
+      const col2 = auraCfg.color2 || "#ff8c00";
+      const rot = t * (auraCfg.speed || 1.0);
+
+      c.save();
+      c.translate(x, y);
+
+      // A. Ground Shadow Ring Base
+      c.save();
+      c.scale(1.0, 0.44);
+      c.beginPath();
+      c.arc(0, 0, r * 1.08, 0, Math.PI * 2);
+      c.fillStyle = "rgba(0, 0, 0, 0.4)";
+      c.fill();
+
+      // B. Radial Ambient Glow
+      const grad = c.createRadialGradient(0, 0, r * 0.2, 0, 0, r * 1.15);
+      grad.addColorStop(0, "rgba(255, 255, 255, 0.35)");
+      grad.addColorStop(0.4, col1 + "44");
+      grad.addColorStop(0.8, col2 + "22");
+      grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+      c.fillStyle = grad;
+      c.beginPath();
+      c.arc(0, 0, r * 1.15, 0, Math.PI * 2);
+      c.fill();
+
+      // C. Rotating Concentric Runes & Petals
+      c.save();
+      c.rotate(rot);
+      c.strokeStyle = col1;
+      c.lineWidth = 2.2;
+      c.shadowColor = col1;
+      c.shadowBlur = 10;
+      c.beginPath();
+      c.arc(0, 0, r, 0, Math.PI * 2);
+      c.stroke();
+
+      const spokes = 8;
+      for (let i = 0; i < spokes; i++) {
+        const ang = (i / spokes) * Math.PI * 2;
+        const px = Math.cos(ang) * r;
+        const py = Math.sin(ang) * r;
+        c.beginPath();
+        c.arc(px, py, 3.2, 0, Math.PI * 2);
+        c.fillStyle = "#ffffff";
+        c.fill();
+        c.beginPath();
+        c.moveTo(px, py);
+        c.lineTo(Math.cos(ang) * (r - 10), Math.sin(ang) * (r - 10));
+        c.stroke();
+      }
+      c.restore();
+
+      // Counter-Rotating Inner Ring
+      c.save();
+      c.rotate(-rot * 1.4);
+      c.strokeStyle = col2;
+      c.lineWidth = 1.4;
+      c.setLineDash([6, 4]);
+      c.beginPath();
+      c.arc(0, 0, r * 0.68, 0, Math.PI * 2);
+      c.stroke();
+      c.restore();
+      c.restore(); // Undo scale
+
+      // D. Rising Qi Sparks & Particles
+      if (auraCfg.particles) {
+        c.save();
+        const pCount = 8;
+        for (let i = 0; i < pCount; i++) {
+          const pt = (t * 1.2 + (i / pCount)) % 1;
+          const pang = (i * 2.39996) + t * 0.5;
+          const pr = (r * 0.75) * (0.3 + 0.7 * Math.sin(pang * 3));
+          const px = Math.cos(pang) * pr;
+          const py = Math.sin(pang) * pr * 0.44 - pt * 65;
+          const alpha = Math.sin(pt * Math.PI);
+          c.fillStyle = col1;
+          c.globalAlpha = alpha * 0.75;
+          c.beginPath();
+          c.arc(px, py, 1.8 + (1 - pt) * 1.5, 0, Math.PI * 2);
+          c.fill();
+        }
+        c.restore();
+      }
+
+      // E. Qi Beam / Pillar
+      if (auraCfg.pillar) {
+        c.save();
+        c.globalCompositeOperation = "lighter";
+        const beamGrad = c.createLinearGradient(0, y - 80, 0, y);
+        beamGrad.addColorStop(0, "rgba(255,255,255,0)");
+        beamGrad.addColorStop(0.5, col1 + "22");
+        beamGrad.addColorStop(1, col2 + "44");
+        c.fillStyle = beamGrad;
+        c.fillRect(-r * 0.4, -90, r * 0.8, 90);
+        c.restore();
+      }
+
+      c.restore();
+    }
+
+    // 6. DRAW BOUNDED MARTIAL ARTS ARENA (MAP KHÔNG QUÁ RỘNG)
+    function drawGround(c) {
+      if (floorMode === 4) return; // Transparent
+
+      // A. Outer Void / Deep Background
+      c.fillStyle = "#05070a";
+      c.fillRect(-2400, -2400, 4800, 4800);
+
+      // B. Draw Arena Platform Floor
+      c.save();
+      c.beginPath();
+      c.roundRect(ARENA.x, ARENA.y, ARENA.w, ARENA.h, ARENA.r);
+      c.clip();
+
+      const src = FLOOR_SRCS[floorMode];
+      const im = src ? getImg(src) : null;
+      if (floorMode !== 3 && isImgReady(im)) {
+        const ptrn = c.createPattern(im, "repeat");
+        c.fillStyle = ptrn;
+        c.fillRect(ARENA.x, ARENA.y, ARENA.w, ARENA.h);
+      } else {
+        c.fillStyle = "#0e141d";
+        c.fillRect(ARENA.x, ARENA.y, ARENA.w, ARENA.h);
+      }
+
+      // Inner Arena Martial Circle / Duel Ring (Center Sparring Mark)
+      c.save();
+      c.scale(1.0, 0.48);
+      c.beginPath();
+      c.arc(0, 0, 160, 0, Math.PI * 2);
+      c.strokeStyle = "rgba(242, 201, 76, 0.28)";
+      c.lineWidth = 3;
+      c.stroke();
+
+      c.beginPath();
+      c.arc(0, 0, 80, 0, Math.PI * 2);
+      c.strokeStyle = "rgba(56, 189, 248, 0.22)";
+      c.lineWidth = 1.5;
+      c.stroke();
+      c.restore();
+
+      c.restore(); // Undo clip
+
+      // C. Arena Perimeter Border & Stone Kerb
+      c.save();
+      c.beginPath();
+      c.roundRect(ARENA.x, ARENA.y, ARENA.w, ARENA.h, ARENA.r);
+      c.strokeStyle = "rgba(197, 155, 39, 0.65)";
+      c.lineWidth = 5;
+      c.shadowColor = "rgba(242, 201, 76, 0.35)";
+      c.shadowBlur = 10;
+      c.stroke();
+
+      // Outer Granite Rim
+      c.beginPath();
+      c.roundRect(ARENA.x - 6, ARENA.y - 6, ARENA.w + 12, ARENA.h + 12, ARENA.r + 4);
+      c.strokeStyle = "#253140";
+      c.lineWidth = 4;
+      c.shadowBlur = 0;
+      c.stroke();
+
+      // 4 Corner Braziers / Stone Lantern Markers
+      const cornerOffsets = [
+        [ARENA.x + 18, ARENA.y + 18],
+        [ARENA.x + ARENA.w - 18, ARENA.y + 18],
+        [ARENA.x + 18, ARENA.y + ARENA.h - 18],
+        [ARENA.x + ARENA.w - 18, ARENA.y + ARENA.h - 18]
+      ];
+      for (const [cx, cy] of cornerOffsets) {
+        c.beginPath();
+        c.arc(cx, cy, 10, 0, Math.PI * 2);
+        c.fillStyle = "#1b2430";
+        c.fill();
+        c.strokeStyle = "#f2c94c";
+        c.lineWidth = 2;
+        c.stroke();
+
+        // Little Flame Core
+        c.beginPath();
+        c.arc(cx, cy - 2, 4, 0, Math.PI * 2);
+        c.fillStyle = "#ffaa00";
+        c.shadowColor = "#ff6600";
+        c.shadowBlur = 8;
+        c.fill();
+        c.shadowBlur = 0;
+      }
+      c.restore();
+    }
+
+    // DRAW GRID LINES
+    function drawGrid(c) {
+      if (!showGrid) return;
+      c.save();
+      c.beginPath();
+      c.roundRect(ARENA.x, ARENA.y, ARENA.w, ARENA.h, ARENA.r);
+      c.clip();
+
+      c.strokeStyle = "rgba(255, 255, 255, 0.05)";
+      c.lineWidth = 1;
+      const step = 64;
+
+      c.beginPath();
+      for (let x = ARENA.x; x <= ARENA.x + ARENA.w; x += step) {
+        c.moveTo(x, ARENA.y); c.lineTo(x, ARENA.y + ARENA.h);
+      }
+      for (let y = ARENA.y; y <= ARENA.y + ARENA.h; y += step) {
+        c.moveTo(ARENA.x, y); c.lineTo(ARENA.x + ARENA.w, y);
+      }
+      c.stroke();
+
+      // Center Axes
+      c.strokeStyle = "rgba(242, 201, 76, 0.22)";
+      c.beginPath();
+      c.moveTo(ARENA.x, 0); c.lineTo(ARENA.x + ARENA.w, 0);
+      c.moveTo(0, ARENA.y); c.lineTo(0, ARENA.y + ARENA.h);
+      c.stroke();
+      c.restore();
+    }
+
+    // 7. DRAW ENTITIES
+    function drawEntity(c, ent, t) {
+      const act = ent.act || "st";
+      const dir = ent.dir || 0;
+      const actT = (ent.actT !== undefined) ? ent.actT : t;
+
+      // 1. Draw Aura
+      if (ent.aura && ent.aura.enabled) {
+        drawAura(c, ent.x, ent.y, ent.aura, t, ent.scale || 1.0);
+      }
+
+      // 2. Draw Doll
+      if (ent.type === "doll") {
+        if (typeof window.drawDollFromLook === "function") {
+          const look = {
+            sx: ent.cfg.sex || "m",
+            fac: ent.cfg.fac || "shaolin",
+            rows: ent.cfg.rows || { weapon: 0, helm: 19, armor: 19 },
+            ride: 0,
+            mg: act === "mag"
+          };
+          window.drawDollFromLook(c, look, act, dir, actT, ent.x, ent.y, ent.scale || 1.55, 1, showShadow);
+        }
+      } 
+      // 3. Draw Monster
+      else if (ent.type === "monster") {
+        drawMonsterEntity(c, ent, act, dir, actT);
+      }
+      // 4. Draw Dummy
+      else if (ent.type === "dummy") {
+        drawDummyEntity(c, ent);
+      }
+
+      // 5. Draw Selected Ring / HUD indicator
+      if (selectedEntity === ent) {
+        c.save();
+        c.scale(1.0, 0.44);
+        c.beginPath();
+        c.arc(ent.x, (ent.y + 4) / 0.44, 34, 0, Math.PI * 2);
+        c.strokeStyle = "#38bdf8";
+        c.lineWidth = 2;
+        c.setLineDash([4, 4]);
+        c.stroke();
+        c.restore();
+      }
+
+      // 6. Draw Name & HP Bar
+      drawEntityNameAndBar(c, ent);
+    }
+
+    // DRAW MONSTER ENTITY
+    function drawMonsterEntity(c, ent, act, dir, actT) {
+      const animKey = ent.animKey || "ani001";
+      const animDef = (window.JW && window.JW.anim && window.JW.anim[animKey]) ||
+                      (window.__HD_ANIM && window.__HD_ANIM[animKey]) ||
+                      (window.JX_ANIM && window.JX_ANIM[animKey]);
+      if (!animDef) return;
+
+      const actDef = animDef[act] || animDef.st;
+      if (!actDef) return;
+
+      const im = getImg("img/char/" + actDef.f);
+      if (!isImgReady(im)) return;
+
+      const ms = actDef.ms || 100;
+      const totalFrames = actDef.n || 1;
+      const isLoop = act !== "die" && act !== "at" && act !== "hurt";
+      let frameIdx = Math.floor((actT * 1000) / ms);
+      frameIdx = isLoop ? (frameIdx % totalFrames) : Math.min(frameIdx, totalFrames - 1);
+
+      const numDirs = actDef.d || 8;
+      const dirIdx = numDirs >= 8 ? (dir % 8) : Math.floor(((dir % 8) * numDirs) / 8);
+
+      // Exact pixel-perfect frame slicing from texture
+      const fw = (im.naturalWidth && totalFrames) ? Math.round(im.naturalWidth / totalFrames) : actDef.w;
+      const fh = (im.naturalHeight && numDirs) ? Math.round(im.naturalHeight / numDirs) : actDef.h;
+
+      const scRatioX = actDef.w ? (fw / actDef.w) : 1;
+      const scRatioY = actDef.h ? (fh / actDef.h) : 1;
+      const ax = actDef.ax * scRatioX;
+      const ay = actDef.ay * scRatioY;
+
+      // In-game scale factor matching native engine
+      const baseScale = ent.scale || 1.0;
+      const k0 = (baseScale * 0.6) / (actDef.s || 0.6);
+      const sc = (actDef.s === 1 && Math.abs(k0 - 0.9) < 0.15) ? 1 : k0;
+
+      // Shadow
+      if (showShadow && act !== "die") {
+        c.save();
+        c.globalAlpha = 0.3;
+        c.fillStyle = "#080c08";
+        c.beginPath();
+        c.ellipse(ent.x + 8 * sc, ent.y - 2 * sc, Math.min(26, fw * 0.28) * sc, Math.min(8, fh * 0.1) * sc, -0.25, 0, Math.PI * 2);
+        c.fill();
+        c.restore();
+      }
+
+      // Hit recoil flash
+      if (ent.hitT > 0) {
+        c.save();
+        c.globalAlpha = 0.8;
+      }
+
+      // Sprite
+      c.drawImage(
+        im,
+        frameIdx * fw, dirIdx * fh, fw, fh,
+        Math.round(ent.x - ax * sc), Math.round(ent.y - ay * sc),
+        Math.round(fw * sc), Math.round(fh * sc)
+      );
+
+      if (ent.hitT > 0) {
+        c.restore();
+      }
+    }
+
+    // DRAW DUMMY ENTITY
+    function drawDummyEntity(c, ent) {
+      c.save();
+      if (showShadow) {
+        c.fillStyle = "rgba(0, 0, 0, 0.4)";
+        c.beginPath();
+        c.ellipse(ent.x, ent.y, 22, 9, 0, 0, Math.PI * 2);
+        c.fill();
+      }
+
+      // Stylized wooden dummy
+      c.fillStyle = "#8d5b2d";
+      c.fillRect(ent.x - 7, ent.y - 65, 14, 65);
+      c.fillStyle = "#a8713d";
+      c.fillRect(ent.x - 22, ent.y - 48, 44, 8);
+      c.fillStyle = "#c59055";
+      c.beginPath();
+      c.arc(ent.x, ent.y - 70, 10, 0, Math.PI * 2);
+      c.fill();
+
+      // Hit recoil
+      if (ent.hitT > 0) {
+        c.fillStyle = "rgba(255, 255, 255, 0.4)";
+        c.fillRect(ent.x - 24, ent.y - 82, 48, 85);
+      }
+      c.restore();
+    }
+
+    // DRAW NAME & HP BAR
+    function drawEntityNameAndBar(c, ent) {
+      const topY = ent.y - 84 * (ent.scale || 1.0);
+      c.save();
+      c.textAlign = "center";
+      c.font = '600 11.5px "Noto Serif", serif';
+      c.shadowColor = "#000";
+      c.shadowBlur = 4;
+
+      // Name
+      c.fillStyle = ent.nameColor || (ent.type === "doll" ? "#f2c94c" : (ent.isBoss ? "#ef4444" : "#e2e8f0"));
+      c.fillText(ent.name, ent.x, topY);
+
+      // HP Bar
+      const barW = 44 * (ent.scale || 1.0);
+      const barH = 5;
+      const hpRatio = Math.max(0, Math.min(1, ent.hp / ent.maxHp));
+      c.shadowBlur = 0;
+      c.fillStyle = "rgba(0, 0, 0, 0.75)";
+      c.fillRect(ent.x - barW * 0.5, topY + 4, barW, barH);
+      c.fillStyle = ent.type === "doll" ? "#38bdf8" : (hpRatio > 0.35 ? "#ef4444" : "#b91c1c");
+      c.fillRect(ent.x - barW * 0.5 + 1, topY + 5, (barW - 2) * hpRatio, barH - 2);
+      c.restore();
+    }
+
+    // 8. MISSILES & SPRITE FX ENGINE
+    function vt(sDef, dir, t, x, y, isLoop) {
+      if (!sDef || !sDef.f) return false;
+      const im = getImg(sDef.f);
+      if (!isImgReady(im)) return false;
+
+      const ms = sDef.ms || 60;
+      const totalFrames = sDef.n || 1;
+      const frame = isLoop ? Math.floor((t * 1000) / ms) % totalFrames : Math.min(totalFrames - 1, Math.floor((t * 1000) / ms));
+      const dirRow = sDef.d > 1 ? Math.round((dir * sDef.d) / 16) % sDef.d : 0;
+      const sc = sDef.sc || 1;
+
+      ctx.save();
+      ctx.drawImage(
+        im,
+        frame * sDef.w, dirRow * sDef.h, sDef.w, sDef.h,
+        Math.round(x - sDef.ax * sc), Math.round(y - sDef.ay * sc),
+        Math.round(sDef.w * sc), Math.round(sDef.h * sc)
+      );
+      ctx.restore();
+      return true;
+    }
+
+    function updateMissilesAndFx(dt) {
+      // 1. Update In-Flight Missiles
+      for (let i = activeMissiles.length - 1; i >= 0; i--) {
+        const m = activeMissiles[i];
+        m.t += dt;
+        const progress = Math.min(1, m.t / m.life);
+        m.curX = m.startX + (m.targetX - m.startX) * progress;
+        m.curY = m.startY + (m.targetY - m.startY) * progress;
+
+        if (progress >= 1) {
+          triggerHitEffect(m);
+          activeMissiles.splice(i, 1);
+        }
+      }
+
+      // 2. Update Ground/Target Hit Explosions
+      for (let i = activeExplosions.length - 1; i >= 0; i--) {
+        const ex = activeExplosions[i];
+        ex.t += dt;
+        if (ex.t >= ex.life) {
+          activeExplosions.splice(i, 1);
+        }
+      }
+
+      // 3. Update Click Ripples
+      for (let i = clickRipples.length - 1; i >= 0; i--) {
+        const rip = clickRipples[i];
+        rip.t += dt;
+        rip.r += 45 * dt;
+        if (rip.t >= rip.life) {
+          clickRipples.splice(i, 1);
+        }
+      }
+    }
+
+    function triggerHitEffect(m) {
+      // Spawn Hit Animation
+      if (m.sHit) {
+        const totalDuration = ((m.sHit.n || 6) * (m.sHit.ms || 60)) / 1000;
+        activeExplosions.push({
+          sDef: m.sHit,
+          x: m.targetX,
+          y: m.targetY,
+          t: 0,
+          life: totalDuration
+        });
+      }
+
+      // Target reaction
+      if (m.targetEnt) {
+        m.targetEnt.hitT = 0.28;
+        if (m.targetEnt.act !== "die") {
+          setEntityAct(m.targetEnt, "hurt");
+        }
+
+        const isCrit = Math.random() < 0.35;
+        const rawDmg = Math.floor(Math.random() * 4500) + 11200;
+        m.targetEnt.hp = Math.max(0, m.targetEnt.hp - rawDmg);
+
+        // Native Ingame Combat Floater Style
+        const dmgText = (isCrit ? "✦ -" : "-") + formatCombatNum(rawDmg) + (isCrit ? "!" : "");
+        const col = isCrit ? DMG_COL.crit : DMG_COL.phys;
+        addCombatText(m.targetEnt.x, m.targetEnt.y - 45, dmgText, col, isCrit ? 18 : 14, isCrit);
+
+        // Die check
+        if (m.targetEnt.hp <= 0 && m.targetEnt.act !== "die") {
+          setEntityAct(m.targetEnt, "die");
+          setTimeout(() => {
+            if (m.targetEnt) {
+              m.targetEnt.hp = m.targetEnt.maxHp;
+              setEntityAct(m.targetEnt, "st");
+              m.targetEnt.x = m.targetEnt.originX || m.targetEnt.x;
+              m.targetEnt.y = m.targetEnt.originY || m.targetEnt.y;
+            }
+          }, 2400);
+        }
+      }
+    }
+
+    function drawMissiles(c) {
+      for (const m of activeMissiles) {
+        if (m.sFly) {
+          vt(m.sFly, m.dir, m.t, m.curX, m.curY, true);
+        } else {
+          c.save();
+          c.fillStyle = "#ffd700";
+          c.shadowColor = "#ff8c00";
+          c.shadowBlur = 10;
+          c.beginPath();
+          c.arc(m.curX, m.curY, 6, 0, Math.PI * 2);
+          c.fill();
+          c.restore();
+        }
+      }
+    }
+
+    function drawExplosions(c) {
+      for (const ex of activeExplosions) {
+        if (ex.sDef) {
+          vt(ex.sDef, 0, ex.t, ex.x, ex.y, false);
+        }
+      }
+    }
+
+    function drawClickRipples(c) {
+      for (const rip of clickRipples) {
+        const alpha = Math.max(0, 1 - rip.t / rip.life);
+        c.save();
+        c.scale(1.0, 0.44);
+        c.beginPath();
+        c.arc(rip.x, rip.y / 0.44, rip.r, 0, Math.PI * 2);
+        c.strokeStyle = `rgba(242, 201, 76, ${alpha * 0.8})`;
+        c.lineWidth = 2;
+        c.stroke();
+        c.restore();
+      }
+    }
+
+    // IN-GAME COMBAT TEXT & DAMAGE ENGINE
+    const DMG_COL = {
+      phys: "#ffffff",
+      crit: "#d868ff",
+      poison: "#48e868",
+      cold: "#58c8ff",
+      fire: "#ff4d4d",
+      light: "#ffa630"
+    };
+
+    function formatCombatNum(s) {
+      s = Math.round(s);
+      const A = Math.abs(s);
+      return A < 1e4 ? "" + s : A < 1e6 ? (s / 1e3).toFixed(A < 1e5 ? 1 : 0) + "k" : (s / 1e6).toFixed(2) + "M";
+    }
+
+    function addCombatText(x, y, text, color, size = 14, isCrit = false) {
+      floatingCombatTexts.push({
+        x: x + (Math.random() * 12 - 6),
+        y: y,
+        t: text,
+        color: color || DMG_COL.phys,
+        size: size,
+        big: isCrit || size >= 15,
+        life: 1.05,
+        max: 1.05
+      });
+    }
+
+    function drawFloatingCombatText(c, dt) {
+      for (let i = floatingCombatTexts.length - 1; i >= 0; i--) {
+        const a = floatingCombatTexts[i];
+        a.life -= dt;
+        if (a.life <= 0) {
+          floatingCombatTexts.splice(i, 1);
+          continue;
+        }
+        const mx = a.max || 1;
+        const k = 1 - Math.max(0, Math.min(1, a.life / mx));
+        const sc = a.big ? 1 + Math.max(0, 0.42 - k * 1.1) : 1;
+        const dy = a.y - k * 42;
+
+        c.save();
+        c.globalAlpha = Math.min(1, a.life * 2.6);
+        c.translate(a.x, dy);
+        if (sc !== 1) c.scale(sc, sc);
+
+        c.font = `bold ${a.size || 14}px "Noto Serif", "IBM Plex Mono", sans-serif`;
+        c.textAlign = "center";
+        c.lineWidth = 3.2;
+        c.strokeStyle = "rgba(16,12,8,0.9)";
+        if (a.big) {
+          c.shadowColor = a.color;
+          c.shadowBlur = 8;
+        }
+        c.strokeText(a.t, 0, 0);
+        c.shadowBlur = 0;
+        c.fillStyle = a.color;
+        c.fillText(a.t, 0, 0);
+        c.restore();
+      }
+    }
+
+    function setEntityAct(ent, newAct) {
+      if (ent.act !== newAct) {
+        ent.act = newAct;
+        ent.actT = 0;
+      }
+    }
+
+    // 9. ENTITY AI & MOVEMENT CONTROLLER
+    function updateEntities(dt) {
+      if (!heroDoll) return;
+
+      // A. DOLL MOVEMENT (WASD KEYBOARD & CLICK-TO-MOVE)
+      let moveDx = 0, moveDy = 0;
+      if (keysDown.w || keysDown.up) moveDy -= 1;
+      if (keysDown.s || keysDown.down) moveDy += 1;
+      if (keysDown.a || keysDown.left) moveDx -= 1;
+      if (keysDown.d || keysDown.right) moveDx += 1;
+
+      if (moveDx !== 0 || moveDy !== 0) {
+        heroDoll.moveTarget = null;
+        const len = Math.hypot(moveDx, moveDy);
+        const nx = moveDx / len;
+        const ny = moveDy / len;
+        heroDoll.dir = P8(moveDx, moveDy);
+        heroDoll.x += nx * heroDoll.speed * dt;
+        heroDoll.y += ny * heroDoll.speed * dt;
+        if (heroDoll.act !== "at" && heroDoll.act !== "mag" && heroDoll.act !== "hurt") {
+          setEntityAct(heroDoll, "run");
+        }
+      } else if (heroDoll.moveTarget) {
+        const dx = heroDoll.moveTarget.x - heroDoll.x;
+        const dy = heroDoll.moveTarget.y - heroDoll.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist <= 8) {
+          heroDoll.x = heroDoll.moveTarget.x;
+          heroDoll.y = heroDoll.moveTarget.y;
+          heroDoll.moveTarget = null;
+          if (heroDoll.act === "run") setEntityAct(heroDoll, "st");
+        } else {
+          heroDoll.dir = P8(dx, dy);
+          const step = Math.min(dist, heroDoll.speed * dt);
+          heroDoll.x += (dx / dist) * step;
+          heroDoll.y += (dy / dist) * step;
+          if (heroDoll.act !== "at" && heroDoll.act !== "mag" && heroDoll.act !== "hurt") {
+            setEntityAct(heroDoll, "run");
+          }
+        }
+      } else {
+        if (heroDoll.act === "run") setEntityAct(heroDoll, "st");
+      }
+
+      // Clamp Doll inside Arena Platform
+      heroDoll.x = Math.max(ARENA.x + 35, Math.min(ARENA.x + ARENA.w - 35, heroDoll.x));
+      heroDoll.y = Math.max(ARENA.y + 35, Math.min(ARENA.y + ARENA.h - 35, heroDoll.y));
+
+      // Reset Doll attack animation once finished
+      if ((heroDoll.act === "at" || heroDoll.act === "mag") && heroDoll.actT > 0.45) {
+        setEntityAct(heroDoll, "st");
+      }
+
+      // B. MONSTER AI (PATROL 2~3 TILES & ATTACK DOLL WITHOUT HP LOSS)
+      for (const ent of entities) {
+        if (ent.type !== "monster" || ent.act === "die") continue;
+
+        if (ent.attackCooldown > 0) ent.attackCooldown -= dt;
+
+        const distToDoll = Math.hypot(heroDoll.x - ent.x, heroDoll.y - ent.y);
+
+        // 1. AGGRO ON DOLL IF CLOSE (< 85px)
+        if (distToDoll <= 85) {
+          ent.dir = P8(heroDoll.x - ent.x, heroDoll.y - ent.y);
+
+          if (ent.attackCooldown <= 0) {
+            setEntityAct(ent, "at");
+            ent.attackCooldown = 1.35;
+
+            // Attack hits Doll: in-game floater "Né"
+            addCombatText(heroDoll.x, heroDoll.y - 45, "Né", "#99ccff", 12, false);
+
+            // CRITICAL REQUIREMENT: Nhân vật không mất máu!
+            heroDoll.hp = heroDoll.maxHp;
+          } else if (ent.act === "at") {
+            const animDef = (window.JW && window.JW.anim && window.JW.anim[ent.animKey]) || (window.JX_ANIM && window.JX_ANIM[ent.animKey]);
+            const actDef = animDef && animDef.at;
+            const atDuration = actDef ? ((actDef.n * actDef.ms) / 1000) : 0.5;
+            if (ent.actT >= atDuration) {
+              setEntityAct(ent, "st");
+            }
+          }
+        }
+        // 2. PATROL BACK AND FORTH IN 2~3 TILES (~75px) AND RETURN
+        else {
+          if (ent.act === "at") {
+            const animDef = (window.JW && window.JW.anim && window.JW.anim[ent.animKey]) || (window.JX_ANIM && window.JX_ANIM[ent.animKey]);
+            const actDef = animDef && animDef.at;
+            const atDuration = actDef ? ((actDef.n * actDef.ms) / 1000) : 0.5;
+            if (ent.actT >= atDuration) setEntityAct(ent, "st");
+          }
+
+          const distFromOrigin = Math.hypot(ent.x - ent.originX, ent.y - ent.originY);
+          if (distFromOrigin > ent.patrolRange + 20) {
+            // Return to patrol origin
+            const dx = ent.originX - ent.x;
+            const dy = ent.originY - ent.y;
+            const d = Math.hypot(dx, dy);
+            ent.dir = P8(dx, dy);
+            setEntityAct(ent, "run");
+            ent.x += (dx / d) * 55 * dt;
+            ent.y += (dy / d) * 55 * dt;
+          } else {
+            if (ent.patrolPause > 0) {
+              ent.patrolPause -= dt;
+              setEntityAct(ent, "st");
+            } else {
+              setEntityAct(ent, "run");
+              const targetX = ent.originX + ent.patrolDir * ent.patrolRange;
+              ent.dir = ent.patrolDir > 0 ? 6 : 2;
+              ent.x += ent.patrolDir * 50 * dt;
+
+              if ((ent.patrolDir > 0 && ent.x >= targetX) || (ent.patrolDir < 0 && ent.x <= targetX)) {
+                ent.x = targetX;
+                ent.patrolDir = -ent.patrolDir;
+                ent.patrolPause = 1.0;
+                setEntityAct(ent, "st");
+              }
+            }
+          }
+        }
+
+        // Clamp Monster inside Arena
+        ent.x = Math.max(ARENA.x + 35, Math.min(ARENA.x + ARENA.w - 35, ent.x));
+        ent.y = Math.max(ARENA.y + 35, Math.min(ARENA.y + ARENA.h - 35, ent.y));
+      }
+    }
+
+    // 10. CAST INGAME SKILL ACTION
+    function castSkill(fxId) {
+      if (!heroDoll) {
+        showToast("Cần có Doll trên sàn đấu!");
+        return;
+      }
+
+      const fxData = window.__HD_FX && window.__HD_FX.m && window.__HD_FX.m[String(fxId)];
+      if (!fxData) {
+        showToast("Không tìm thấy dữ liệu FX #" + fxId);
+        return;
+      }
+
+      // Find nearest monster or dummy
+      let target = null;
+      let minDist = Infinity;
+      for (const ent of entities) {
+        if (ent === heroDoll || ent.act === "die") continue;
+        const d = Math.hypot(ent.x - heroDoll.x, ent.y - heroDoll.y);
+        if (d < minDist) {
+          minDist = d;
+          target = ent;
+        }
+      }
+
+      // If no monster, target 140px in front of Doll
+      if (!target) {
+        const rad = ((heroDoll.dir || 0) * Math.PI) / 4;
+        target = {
+          x: heroDoll.x + Math.sin(rad) * 140,
+          y: heroDoll.y - Math.cos(rad) * 140,
+          hp: 999999,
+          maxHp: 999999
+        };
+      }
+
+      // Face target & play attack
+      heroDoll.dir = P8(target.x - heroDoll.x, target.y - heroDoll.y);
+      heroDoll.act = "at";
+      heroDoll.actT = 0;
+
+      // Launch Native Missile FX
+      const spd = fxData.spd || 360;
+      const dist = Math.hypot(target.x - heroDoll.x, target.y - heroDoll.y);
+      const life = Math.max(0.2, dist / spd);
+
+      activeMissiles.push({
+        sFly: fxData.fly || null,
+        sHit: fxData.hit || null,
+        startX: heroDoll.x,
+        startY: heroDoll.y - 25,
+        targetX: target.x,
+        targetY: target.y - 20,
+        curX: heroDoll.x,
+        curY: heroDoll.y - 25,
+        dir: M5(target.x - heroDoll.x, target.y - heroDoll.y),
+        t: 0,
+        life: life,
+        targetEnt: target.id ? target : null
+      });
+
+      showToast(`Thi triển chiêu thức FX #${fxId}`);
+    }
+
+    // 11. MAIN RENDER LOOP
+    function render(stamp) {
+      const dt = Math.min(0.1, (stamp - lastStamp) / 1000);
+      lastStamp = stamp;
+
+      if (isPlaying) {
+        animTime += dt;
+        for (const ent of entities) {
+          ent.actT = (ent.actT || 0) + dt;
+          if (ent.hitT > 0) ent.hitT -= dt;
+        }
+        updateEntities(dt);
+        updateMissilesAndFx(dt);
+      }
+
+      // Auto Rotate Doll
+      if (autoRotate && isPlaying && heroDoll && heroDoll.act === "st") {
+        heroDoll.dir = Math.floor((animTime * 1.5) % 8);
+      }
+
+      // FPS Calculation
+      fpsCount++;
+      fpsTimer += dt;
+      if (fpsTimer >= 0.5) {
+        document.getElementById("statFps").textContent = Math.round(fpsCount / fpsTimer);
+        fpsCount = 0;
+        fpsTimer = 0;
+      }
+      document.getElementById("timeDisplay").textContent = animTime.toFixed(2) + "s";
+      document.getElementById("statEntities").textContent = entities.length;
+
+      // Clear Canvas
+      ctx.clearRect(0, 0, viewW, viewH);
+
+      // Save Context & Apply Camera Transform
+      ctx.save();
+      ctx.translate(viewW * 0.5, viewH * 0.5);
+      ctx.scale(camZoom, camZoom);
+      ctx.translate(-camX, -camY);
+
+      // 1. Draw Bounded Arena Ground
+      drawGround(ctx);
+
+      // 2. Draw Grid Inside Arena
+      drawGrid(ctx);
+
+      // 3. Draw Click-to-Move Ripples
+      drawClickRipples(ctx);
+
+      // 4. Sort Entities by Y-depth
+      entities.sort((a, b) => a.y - b.y);
+
+      // 5. Draw All Entities
+      for (const ent of entities) {
+        drawEntity(ctx, ent, animTime);
+      }
+
+      // 6. Draw In-Flight Missiles
+      drawMissiles(ctx);
+
+      // 7. Draw Target Hit Explosions
+      drawExplosions(ctx);
+
+      // 8. Draw Combat Numbers
+      drawFloatingCombatText(ctx, dt);
+
+      ctx.restore();
+
+      requestAnimationFrame(render);
+    }
+
+    // 12. POPULATION FUNCTIONS (EQUIP, MONSTERS, FX)
+
+    // POPULATE EQUIPMENT LIST FROM JDOLL.gold & JX.items
+    function populateEquip() {
+      const container = document.getElementById("equipListContainer");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const kind = document.getElementById("equipKind").value;
+      const tier = document.getElementById("equipSetTier").value;
+      const q = (document.getElementById("equipSearch").value || "").toLowerCase().trim();
+
+      const goldItems = window.JDOLL && window.JDOLL.gold ? Object.entries(window.JDOLL.gold) : [];
+
+      let added = 0;
+      for (const [name, rowArr] of goldItems) {
+        if (q && !name.toLowerCase().includes(q)) continue;
+
+        const part = rowArr[0]; // 0: weapon, 2: armor, 7: helm, 1: amkhi
+        const row = rowArr[1];
+
+        if (kind === "weapon" && part !== 0 && part !== 1) continue;
+        if (kind === "armor" && part !== 2) continue;
+        if (kind === "helm" && part !== 7) continue;
+
+        if (tier === "kimo" && !name.includes("Kim Ô") && !name.includes("Bạch Hổ")) continue;
+        if (tier === "xichlan" && !name.includes("Xích Lân") && !name.includes("Minh Phượng")) continue;
+        if (tier === "danglong" && !name.includes("Đằng Long")) continue;
+        if (tier === "dinhquoc" && !name.includes("Định Quốc") && !name.includes("Kim Phong")) continue;
+
+        const partName = part === 0 ? "Vũ Khí" : (part === 2 ? "Áo Giáp" : (part === 7 ? "Mũ Nón" : "Ám Khí"));
+        const iconPath = part === 0 ? "res/icons/items/wep.png" : (part === 2 ? "res/icons/items/armor.png" : "res/icons/items/helm.png");
+
+        const item = document.createElement("div");
+        item.className = "list-item";
+        item.innerHTML = `
+          <div class="list-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:14px;">
+            <i class="fa-solid ${part === 0 ? 'fa-khanda' : (part === 2 ? 'fa-shield-halved' : 'fa-hat-cowboy')}"></i>
+          </div>
+          <div class="list-info">
+            <div class="list-title" style="color:var(--gold);">${name}</div>
+            <div class="list-sub">${partName} · Row ID: ${row}</div>
+          </div>
+        `;
+
+        item.addEventListener("click", () => {
+          container.querySelectorAll(".list-item").forEach(i => i.classList.remove("selected"));
+          item.classList.add("selected");
+          equipItemToDoll(part, row, name);
+        });
+
+        container.appendChild(item);
+        added++;
+        if (added > 120) break; // Limit list rendering
+      }
+    }
+
+    function equipItemToDoll(part, row, name) {
+      if (!selectedEntity || selectedEntity.type !== "doll") {
+        selectedEntity = heroDoll;
+      }
+      if (!selectedEntity || selectedEntity.type !== "doll") return;
+
+      if (part === 0 || part === 1) {
+        selectedEntity.cfg.rows.weapon = row;
+        elWepRow.value = row;
+      } else if (part === 2) {
+        selectedEntity.cfg.rows.armor = row;
+        elArmorRow.value = row;
+      } else if (part === 7) {
+        selectedEntity.cfg.rows.helm = row;
+        elHelmRow.value = row;
+      }
+      syncDollSliders();
+      showToast(`Đã mặc: ${name}`);
+    }
+
+    // POPULATE MONSTERS LIST
+    function populateMonsters() {
+      const container = document.getElementById("monListContainer");
+      if (!container) return;
+      container.innerHTML = "";
+      if (!window.JW || !window.JW.mon) return;
+
+      const q = (document.getElementById("monSearch").value || "").toLowerCase().trim();
+
+      Object.entries(window.JW.mon).forEach(([id, m]) => {
+        if (q && !m.n.toLowerCase().includes(q) && !id.includes(q)) return;
+
+        const item = document.createElement("div");
+        item.className = "list-item";
+        item.dataset.monId = id;
+        item.innerHTML = `
+          <img class="list-thumb" src="${m.img || 'res/icons/monsters/ani001.png'}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22><rect fill=%22%23222%22 width=%2232%22 height=%2232%22/></svg>'">
+          <div class="list-info">
+            <div class="list-title">${m.n || ('Quái #' + id)}</div>
+            <div class="list-sub">ID:${id} · Anim:${m.anim || 'ani001'}</div>
+          </div>
+        `;
+        item.addEventListener("click", () => {
+          container.querySelectorAll(".list-item").forEach(i => i.classList.remove("selected"));
+          item.classList.add("selected");
+        });
+        container.appendChild(item);
+      });
+      document.getElementById("statAssets").textContent = `Assets: Doll, FX (${Object.keys(window.__HD_FX?.m || {}).length}), Mon (${Object.keys(window.JW.mon).length})`;
+    }
+
+    // POPULATE FX LIST
+    function populateFx() {
+      const container = document.getElementById("fxListContainer");
+      if (!container) return;
+      container.innerHTML = "";
+      if (!window.__HD_FX || !window.__HD_FX.m) return;
+
+      const q = (document.getElementById("fxSearch").value || "").toLowerCase().trim();
+
+      Object.entries(window.__HD_FX.m).forEach(([id, m]) => {
+        if (q && !id.includes(q)) return;
+
+        const item = document.createElement("div");
+        item.className = "list-item";
+        item.dataset.fxId = id;
+        item.innerHTML = `
+          <div class="list-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--cyan);font-size:13px;">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div class="list-info">
+            <div class="list-title" style="color:var(--cyan);">Chiêu Thức FX #${id}</div>
+            <div class="list-sub">Fly: ${m.fly ? m.fly.n + 'f (' + m.fly.d + 'd)' : 'None'} · Hit: ${m.hit ? m.hit.n + 'f' : 'None'} · Spd: ${m.spd}</div>
+          </div>
+        `;
+        item.addEventListener("click", () => {
+          container.querySelectorAll(".list-item").forEach(i => i.classList.remove("selected"));
+          item.classList.add("selected");
+        });
+        container.appendChild(item);
+      });
+    }
+
+    // 13. SPAWNER HELPERS
+    function spawnDoll(sex, x, y) {
+      const fac = document.getElementById("dollFac").value;
+      const fDef = FACTIONS[fac] || FACTIONS.shaolin;
+      const ent = {
+        id: nextEntityId++,
+        type: "doll",
+        name: (sex === "m" ? "Đại Hiệp " : "Nữ Hiệp ") + fDef.name,
+        nameColor: "#f2c94c",
+        x: x || 0,
+        y: y || 0,
+        dir: 4,
+        act: "st",
+        actT: 0,
+        speed: 210,
+        hp: 12500,
+        maxHp: 12500,
+        scale: parseFloat(elDollScale.value) || 1.55,
+        moveTarget: null,
+        cfg: {
+          sex: sex || document.getElementById("dollSex").value,
+          fac: fac,
+          rows: {
+            weapon: parseInt(elWepRow.value, 10) || 0,
+            armor: parseInt(elArmorRow.value, 10) || 19,
+            helm: parseInt(elHelmRow.value, 10) || 19
+          }
+        },
+        aura: getActiveAuraConfig()
+      };
+      entities.push(ent);
+      heroDoll = ent;
+      selectedEntity = ent;
+      updateEntityHud();
+      showToast("Đã spawn Doll: " + ent.name);
+      return ent;
+    }
+
+    // 14. EVENT LISTENERS & UI WIRING
+
+    // RES PATH UPDATE
+    document.getElementById("btnApplyRes").addEventListener("click", () => {
+      customResBase = elResInput.value.trim();
+      localStorage.setItem("jx_studio_custom_res", customResBase);
+      imgCache.clear();
+      showToast(customResBase ? `Đã nạp đường dẫn RES: ${customResBase}` : "Đã chuyển về RES mặc định");
+    });
+
+    // TAB SWITCHING
+    document.querySelectorAll(".nav-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+        tab.classList.add("active");
+        const target = document.getElementById(tab.dataset.tab);
+        if (target) target.classList.add("active");
+        if (tab.dataset.tab === "tabEquip") populateEquip();
+      });
+    });
+
+    // DOLL SLIDERS
+    const elWepRow = document.getElementById("dollWepRow");
+    const elArmorRow = document.getElementById("dollArmorRow");
+    const elHelmRow = document.getElementById("dollHelmRow");
+    const elDollScale = document.getElementById("dollScale");
+
+    function syncDollSliders() {
+      document.getElementById("valWepRow").textContent = elWepRow.value;
+      document.getElementById("valArmorRow").textContent = elArmorRow.value;
+      document.getElementById("valHelmRow").textContent = elHelmRow.value;
+      document.getElementById("valDollScale").textContent = elDollScale.value + "x";
+      document.getElementById("dollRowSummary").textContent = `W:${elWepRow.value} A:${elArmorRow.value} H:${elHelmRow.value}`;
+
+      if (selectedEntity && selectedEntity.type === "doll") {
+        selectedEntity.cfg.rows.weapon = parseInt(elWepRow.value, 10);
+        selectedEntity.cfg.rows.armor = parseInt(elArmorRow.value, 10);
+        selectedEntity.cfg.rows.helm = parseInt(elHelmRow.value, 10);
+        selectedEntity.scale = parseFloat(elDollScale.value);
+      }
+    }
+    elWepRow.addEventListener("input", syncDollSliders);
+    elArmorRow.addEventListener("input", syncDollSliders);
+    elHelmRow.addEventListener("input", syncDollSliders);
+    elDollScale.addEventListener("input", syncDollSliders);
+
+    // PRESET CHANGE
+    document.getElementById("dollPreset").addEventListener("change", (e) => {
+      const preset = e.target.value;
+      const fac = document.getElementById("dollFac").value;
+      const fDef = FACTIONS[fac] || FACTIONS.shaolin;
+      const wType = document.getElementById("dollWeaponType").value;
+      const wDef = WEAPON_DEFS[wType] || WEAPON_DEFS.kiem;
+
+      if (preset === "tanthu") {
+        elWepRow.value = 0; elArmorRow.value = 19; elHelmRow.value = 19;
+      } else if (preset === "wear0") {
+        elWepRow.value = wDef.rows[0]; elArmorRow.value = fDef.wears[0]; elHelmRow.value = 19;
+      } else if (preset === "wear1") {
+        elWepRow.value = wDef.rows[1]; elArmorRow.value = fDef.wears[1]; elHelmRow.value = 19;
+      } else if (preset === "wear2") {
+        elWepRow.value = wDef.rows[2]; elArmorRow.value = fDef.wears[2]; elHelmRow.value = Math.min(18, fDef.wears[2]);
+      } else if (preset === "sect") {
+        elWepRow.value = fDef.hkWep; elArmorRow.value = fDef.hkArmor; elHelmRow.value = fDef.hkHelm;
+      } else if (preset === "kim_o") {
+        elWepRow.value = 52; elArmorRow.value = 48; elHelmRow.value = 22;
+      } else if (preset === "bach_ho") {
+        elWepRow.value = 52; elArmorRow.value = 48; elHelmRow.value = 22;
+      } else if (preset === "xich_lan") {
+        elWepRow.value = 52; elArmorRow.value = 48; elHelmRow.value = 22;
+      } else if (preset === "minh_phuong") {
+        elWepRow.value = 88; elArmorRow.value = 55; elHelmRow.value = 29;
+      } else if (preset === "dang_long") {
+        elWepRow.value = 114; elArmorRow.value = 55; elHelmRow.value = 29;
+      }
+      syncDollSliders();
+    });
+
+    // ACTION PILLS
+    document.querySelectorAll(".pill-btn[data-act]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".pill-btn[data-act]").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        if (selectedEntity) {
+          selectedEntity.act = btn.dataset.act;
+          selectedEntity.actT = 0;
+        }
+      });
+    });
+
+    // COMPASS DIAL
+    document.querySelectorAll(".compass-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (btn.id === "btnAutoRotate") {
+          autoRotate = !autoRotate;
+          btn.classList.toggle("active", autoRotate);
+          showToast(autoRotate ? "Bật tự xoay 8 hướng" : "Tắt tự xoay");
+          return;
+        }
+        document.querySelectorAll(".compass-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const d = parseInt(btn.dataset.dir, 10);
+        if (selectedEntity) selectedEntity.dir = d;
+      });
+    });
+
+    // AURA CONTROLS
+    function getActiveAuraConfig() {
+      return {
+        enabled: document.getElementById("auraEnable").checked,
+        preset: document.getElementById("auraPreset").value,
+        color1: document.getElementById("auraColor1").value,
+        color2: document.getElementById("auraColor2").value,
+        radius: parseInt(document.getElementById("auraRadius").value, 10) || 42,
+        speed: parseFloat(document.getElementById("auraSpeed").value) || 1.0,
+        particles: document.getElementById("auraParticles").checked,
+        pillar: document.getElementById("auraPillar").checked
+      };
+    }
+    document.getElementById("btnApplyAuraToSelected").addEventListener("click", () => {
+      if (selectedEntity) {
+        selectedEntity.aura = getActiveAuraConfig();
+        showToast("Đã cập nhật vòng sáng cho " + selectedEntity.name);
+      } else {
+        showToast("Vui lòng click chọn 1 thực thể trên sàn trước!");
+      }
+    });
+
+    // SPAWN BUTTONS
+    document.getElementById("btnSpawnDoll").addEventListener("click", () => {
+      spawnDoll(document.getElementById("dollSex").value, 0, 0);
+    });
+    document.getElementById("btnSpawnDuo").addEventListener("click", () => {
+      spawnDoll("m", -55, 0);
+      spawnDoll("f", 55, 0);
+      showToast("Đã spawn Cặp đôi Nam & Nữ!");
+    });
+
+    // SPAWN MONSTER
+    document.getElementById("btnSpawnMon").addEventListener("click", () => {
+      const selItem = document.querySelector("#monListContainer .list-item.selected") || document.querySelector("#monListContainer .list-item");
+      const monId = selItem ? selItem.dataset.monId : "0";
+      const monData = window.JW && window.JW.mon && window.JW.mon[monId];
+      if (!monData) return;
+
+      const count = parseInt(document.getElementById("monSpawnCount").value, 10) || 1;
+      const isBoss = document.getElementById("monQuality").value === "boss";
+
+      for (let i = 0; i < count; i++) {
+        const ox = count > 1 ? (Math.cos((i / count) * Math.PI * 2) * 110) : 150;
+        const oy = count > 1 ? (Math.sin((i / count) * Math.PI * 2) * 60) : 0;
+
+        const ent = {
+          id: nextEntityId++,
+          type: "monster",
+          monId: monId,
+          name: (isBoss ? "👑 Trùm: " : "") + (monData.n || "Quái vật"),
+          isBoss: isBoss,
+          animKey: monData.anim || "ani001",
+          x: ox,
+          y: oy,
+          originX: ox,
+          originY: oy,
+          patrolRange: 75, // Patrol 2~3 tiles (~75px)
+          patrolDir: 1,
+          patrolPause: 0,
+          attackCooldown: 0,
+          dir: 6,
+          act: "st",
+          actT: 0,
+          hp: isBoss ? 250000 : 9500,
+          maxHp: isBoss ? 250000 : 9500,
+          scale: isBoss ? 1.45 : 1.15,
+          aura: isBoss ? { enabled: true, color1: "#ff2222", color2: "#ffaa00", radius: 52, speed: 1.5, particles: true, pillar: true } : null
+        };
+        entities.push(ent);
+      }
+      showToast(`Đã spawn ${count} quái: ${monData.n}`);
+    });
+
+    // SPAWN DUMMY
+    document.getElementById("btnSpawnDummy").addEventListener("click", () => {
+      const ent = {
+        id: nextEntityId++,
+        type: "dummy",
+        name: "Bia Gỗ Luyện Công",
+        nameColor: "#c59055",
+        x: 180,
+        y: 0,
+        originX: 180,
+        originY: 0,
+        dir: 0,
+        act: "st",
+        actT: 0,
+        hp: 999999,
+        maxHp: 999999,
+        scale: 1.0,
+        hitT: 0
+      };
+      entities.push(ent);
+      selectedEntity = ent;
+      showToast("Đã spawn Bia Gỗ Luyện Công!");
+    });
+
+    // FIRE SKILL ACTION
+    document.getElementById("btnFireSkill").addEventListener("click", () => {
+      const selItem = document.querySelector("#fxListContainer .list-item.selected");
+      const fxId = selItem ? selItem.dataset.fxId : "1";
+      castSkill(fxId);
+    });
+
+    document.getElementById("btnLoopFxAtCenter").addEventListener("click", () => {
+      const selItem = document.querySelector("#fxListContainer .list-item.selected");
+      const fxId = selItem ? selItem.dataset.fxId : "1";
+      const fxData = window.__HD_FX && window.__HD_FX.m && window.__HD_FX.m[String(fxId)];
+      if (fxData && fxData.hit) {
+        activeExplosions.push({
+          sDef: fxData.hit,
+          x: 0,
+          y: 0,
+          t: 0,
+          life: ((fxData.hit.n || 6) * (fxData.hit.ms || 60)) / 1000
+        });
+        showToast(`Kích hoạt nổ FX #${fxId} tại tâm đài`);
+      }
+    });
+
+    // SKILL HOTBAR CLICK
+    document.querySelectorAll(".skill-slot").forEach(slot => {
+      slot.addEventListener("click", () => {
+        const fxId = slot.dataset.fx;
+        castSkill(fxId);
+      });
+    });
+
+    // SEARCH & FILTER INPUTS
+    document.getElementById("fxSearch").addEventListener("input", populateFx);
+    document.getElementById("monSearch").addEventListener("input", populateMonsters);
+    document.getElementById("equipSearch").addEventListener("input", populateEquip);
+    document.getElementById("equipKind").addEventListener("change", populateEquip);
+    document.getElementById("equipSetTier").addEventListener("change", populateEquip);
+
+    // MOUSE & CLICK-TO-MOVE INTERACTION
+    canvas.addEventListener("mousedown", (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const sx = e.clientX - rect.left;
+      const sy = e.clientY - rect.top;
+      const world = screenToWorld(sx, sy);
+
+      // Left click
+      if (e.button === 0) {
+        let hit = null;
+        for (let i = entities.length - 1; i >= 0; i--) {
+          const ent = entities[i];
+          const dist = Math.hypot(ent.x - world.x, ent.y - 35 - world.y);
+          if (dist < 42 * (ent.scale || 1.0)) {
+            hit = ent;
+            break;
+          }
+        }
+
+        if (hit) {
+          selectedEntity = hit;
+          draggedEntity = hit;
+          dragOffset.x = hit.x - world.x;
+          dragOffset.y = hit.y - world.y;
+          updateEntityHud();
+        } else {
+          // Click-to-Move Doll inside Arena
+          if (heroDoll) {
+            const clampedX = Math.max(ARENA.x + 35, Math.min(ARENA.x + ARENA.w - 35, world.x));
+            const clampedY = Math.max(ARENA.y + 35, Math.min(ARENA.y + ARENA.h - 35, world.y));
+            heroDoll.moveTarget = { x: clampedX, y: clampedY };
+            clickRipples.push({ x: clampedX, y: clampedY, r: 6, t: 0, life: 0.45 });
+          }
+        }
+      } 
+      // Right click: Pan camera
+      else if (e.button === 2) {
+        isPanning = true;
+        panStartX = e.clientX;
+        panStartY = e.clientY;
+      }
+    });
+
+    canvas.addEventListener("contextmenu", e => e.preventDefault());
+
+    window.addEventListener("mousemove", (e) => {
+      if (draggedEntity) {
+        const rect = canvas.getBoundingClientRect();
+        const world = screenToWorld(e.clientX - rect.left, e.clientY - rect.top);
+        draggedEntity.x = Math.round(world.x + dragOffset.x);
+        draggedEntity.y = Math.round(world.y + dragOffset.y);
+        draggedEntity.originX = draggedEntity.x;
+        draggedEntity.originY = draggedEntity.y;
+      } else if (isPanning) {
+        const dx = (e.clientX - panStartX) / camZoom;
+        const dy = (e.clientY - panStartY) / camZoom;
+        camX -= dx;
+        camY -= dy;
+        panStartX = e.clientX;
+        panStartY = e.clientY;
+      }
+    });
+
+    window.addEventListener("mouseup", () => {
+      isPanning = false;
+      draggedEntity = null;
+    });
+
+    // WHEEL ZOOM
+    canvas.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.12 : 0.89;
+      camZoom = Math.max(0.4, Math.min(3.5, camZoom * zoomFactor));
+      document.getElementById("statZoom").textContent = Math.round(camZoom * 100) + "%";
+    }, { passive: false });
+
+    // HUD CARD UPDATES
+    function updateEntityHud() {
+      const hud = document.getElementById("entityHud");
+      if (!selectedEntity) {
+        hud.classList.remove("show");
+        return;
+      }
+      hud.classList.add("show");
+      document.getElementById("hudEntityName").textContent = selectedEntity.name;
+      document.getElementById("hudEntityId").textContent = "#" + selectedEntity.id;
+      document.getElementById("hudEntityDesc").textContent = 
+        `Loại: ${selectedEntity.type} · HP: ${selectedEntity.hp} · Tọa độ: (${Math.round(selectedEntity.x)}, ${Math.round(selectedEntity.y)})`;
+    }
+
+    document.getElementById("btnHudRotate").addEventListener("click", () => {
+      if (selectedEntity) {
+        selectedEntity.dir = ((selectedEntity.dir || 0) + 1) % 8;
+        showToast("Đã đổi hướng: " + selectedEntity.dir);
+      }
+    });
+    document.getElementById("btnHudAttack").addEventListener("click", () => {
+      if (selectedEntity) {
+        selectedEntity.act = "at";
+        selectedEntity.actT = 0;
+      }
+    });
+    document.getElementById("btnHudDelete").addEventListener("click", () => {
+      if (selectedEntity && selectedEntity !== heroDoll) {
+        const idx = entities.indexOf(selectedEntity);
+        if (idx !== -1) entities.splice(idx, 1);
+        selectedEntity = heroDoll;
+        updateEntityHud();
+        showToast("Đã xóa thực thể!");
+      }
+    });
+
+    // PLAY/PAUSE
+    const btnPlayPause = document.getElementById("btnPlayPause");
+    btnPlayPause.addEventListener("click", () => {
+      isPlaying = !isPlaying;
+      btnPlayPause.textContent = isPlaying ? "⏸ Tạm Dừng" : "▶ Tiếp Tục";
+    });
+    document.getElementById("btnStepForward").addEventListener("click", () => {
+      animTime += 0.05;
+      for (const ent of entities) ent.actT = (ent.actT || 0) + 0.05;
+    });
+    document.getElementById("btnStepBack").addEventListener("click", () => {
+      animTime = Math.max(0, animTime - 0.05);
+      for (const ent of entities) ent.actT = Math.max(0, (ent.actT || 0) - 0.05);
+    });
+
+    // VIEWPORT TOOLS
+    document.getElementById("btnResetCam").addEventListener("click", () => {
+      camX = 0; camY = 0; camZoom = 1.0;
+      document.getElementById("statZoom").textContent = "100%";
+      showToast("Đã căn lại góc nhìn tâm võ đài (0, 0)");
+    });
+    document.getElementById("btnClearStage").addEventListener("click", () => {
+      entities = entities.filter(e => e.type === "doll");
+      selectedEntity = heroDoll;
+      updateEntityHud();
+      showToast("Đã dọn sạch quái trên sàn!");
+    });
+    document.getElementById("btnZoomIn").addEventListener("click", () => {
+      camZoom = Math.min(3.5, camZoom * 1.25);
+      document.getElementById("statZoom").textContent = Math.round(camZoom * 100) + "%";
+    });
+    document.getElementById("btnZoomOut").addEventListener("click", () => {
+      camZoom = Math.max(0.4, camZoom * 0.8);
+      document.getElementById("statZoom").textContent = Math.round(camZoom * 100) + "%";
+    });
+    document.getElementById("btnToggleGrid").addEventListener("click", function() {
+      showGrid = !showGrid;
+      this.classList.toggle("active", showGrid);
+    });
+    document.getElementById("btnToggleShadow").addEventListener("click", function() {
+      showShadow = !showShadow;
+      this.classList.toggle("active", showShadow);
+    });
+    document.getElementById("btnToggleFloor").addEventListener("click", () => {
+      floorMode = (floorMode + 1) % FLOOR_NAMES.length;
+      document.getElementById("lblCurrentFloor").textContent = FLOOR_NAMES[floorMode];
+      showToast("Chuyển mặt sàn: " + FLOOR_NAMES[floorMode]);
+    });
+    document.getElementById("btnScreenshot").addEventListener("click", () => {
+      const a = document.createElement("a");
+      a.download = `jx-studio-${Date.now()}.png`;
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+      showToast("Đã xuất ảnh võ đài PNG!");
+    });
+
+    // KEYBOARD LISTENER (WASD MOVEMENT & NUMBER HOTKEYS)
+    window.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
+
+      if (e.code === "KeyW") keysDown.w = true;
+      else if (e.code === "KeyS") keysDown.s = true;
+      else if (e.code === "KeyA") keysDown.a = true;
+      else if (e.code === "KeyD") keysDown.d = true;
+      else if (e.code === "ArrowUp") keysDown.up = true;
+      else if (e.code === "ArrowDown") keysDown.down = true;
+      else if (e.code === "ArrowLeft") keysDown.left = true;
+      else if (e.code === "ArrowRight") keysDown.right = true;
+
+      // Hotkeys for Skills
+      else if (e.code === "Digit1") castSkill(1);
+      else if (e.code === "Digit2") castSkill(3);
+      else if (e.code === "Digit3") castSkill(11);
+      else if (e.code === "Digit4") castSkill(8);
+      else if (e.code === "Digit5") castSkill(14);
+
+      else if (e.code === "Space") {
+        e.preventDefault();
+        btnPlayPause.click();
+      }
+    });
+
+    window.addEventListener("keyup", (e) => {
+      if (e.code === "KeyW") keysDown.w = false;
+      else if (e.code === "KeyS") keysDown.s = false;
+      else if (e.code === "KeyA") keysDown.a = false;
+      else if (e.code === "KeyD") keysDown.d = false;
+      else if (e.code === "ArrowUp") keysDown.up = false;
+      else if (e.code === "ArrowDown") keysDown.down = false;
+      else if (e.code === "ArrowLeft") keysDown.left = false;
+      else if (e.code === "ArrowRight") keysDown.right = false;
+    });
+
+    // INITIALIZATION
+    resizeCanvas();
+    populateMonsters();
+    populateFx();
+    populateEquip();
+
+    // Spawn Player Doll & Patrol Monster & Practice Dummy
+    spawnDoll("m", -120, 0);
+
+    const initialMon = {
+      id: nextEntityId++,
+      type: "monster",
+      monId: "0",
+      name: "Đông Bắc Hổ",
+      isBoss: false,
+      animKey: "ani001",
+      x: 140,
+      y: 0,
+      originX: 140,
+      originY: 0,
+      patrolRange: 75,
+      patrolDir: 1,
+      patrolPause: 0,
+      attackCooldown: 0,
+      dir: 6,
+      act: "st",
+      actT: 0,
+      hp: 9500,
+      maxHp: 9500,
+      scale: 1.15,
+      aura: null
+    };
+    entities.push(initialMon);
+
+    const dmy = {
+      id: nextEntityId++,
+      type: "dummy",
+      name: "Bia Gỗ Luyện Công",
+      nameColor: "#c59055",
+      x: 240,
+      y: -60,
+      originX: 240,
+      originY: -60,
+      dir: 0,
+      act: "st",
+      actT: 0,
+      hp: 999999,
+      maxHp: 999999,
+      scale: 1.0,
+      hitT: 0
+    };
+    entities.push(dmy);
+
+    // Start Animation Loop
+    requestAnimationFrame(render);
+    showToast("Đã tải xong JX Studio Workbench!");
+  })();
+  </script>
+</body>
+</html>

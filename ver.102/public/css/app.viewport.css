@@ -1,0 +1,361 @@
+/**
+ * JX-IDLE 16:9 Viewport Lock & Auto-Scaling (app.viewport.css)
+ * Fixed Virtual Canvas (1920x1080) with Dynamic CSS Transform Scale & Screen Layer Isolation
+ */
+
+/* 1. Global Viewport & Body Normalization */
+html,
+body {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background-color: #000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* 2. Outer App Wrapper (Fills Browser Window) */
+#game-app {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+  background-color: #000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 2b. Full-Bleed Background Layer (Covers 100vw x 100vh Without Black Bars) */
+#game-bg {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-color: #090604 !important;
+  transition: opacity 0.3s ease;
+}
+
+/* State 1: Auth Screen -> background_1.jpg */
+#game-app.state-auth #game-bg,
+#game-viewport.state-auth ~ #game-bg,
+body.state-auth #game-bg,
+body.ngate-on #game-bg {
+  background-image: radial-gradient(
+    circle at 50% 45%,
+    rgba(15, 10, 7, 0.4) 0%,
+    rgba(8, 5, 3, 0.85) 100%
+  ),
+  url("../res/img/background_1.jpg") !important;
+}
+
+/* State 2: Character Select / Create -> background_2.jpg */
+#game-app.state-char #game-bg,
+#game-viewport.state-char ~ #game-bg,
+body.state-char #game-bg {
+  background-image: radial-gradient(
+    ellipse at 70% 50%,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(9, 6, 4, 0.96) 100%
+  ),
+  url("../res/img/background_2.jpg") !important;
+}
+
+/* State 3: Game Arena */
+#game-app.state-game #game-bg,
+#game-viewport.state-game ~ #game-bg,
+body.state-game #game-bg {
+  background-image: none !important;
+  background-color: #050403 !important;
+}
+
+/* 3. Base Resolution Virtual Viewport (1920x1080 @ 16:9) */
+#game-viewport,
+#game-container {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  width: 1920px !important;
+  height: 1080px !important;
+  min-width: 1920px !important;
+  min-height: 1080px !important;
+  max-width: 1920px !important;
+  max-height: 1080px !important;
+  transform: translate(-50%, -50%) scale(1);
+  transform-origin: center center !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  background-color: transparent !important;
+  z-index: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 4. Common Screen Layer Specification */
+.screen-layer {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1920px !important;
+  height: 1080px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+/* Layer 1: Canvas / World Map Layer */
+#game-world-layer {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1920px !important;
+  height: 1080px !important;
+  z-index: 1 !important;
+  overflow: hidden !important;
+}
+
+#game-world-layer > #battle {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1920px !important;
+  height: 1080px !important;
+  overflow: hidden !important;
+}
+
+#game-world-layer > #battle > #bg {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-size: cover !important;
+  background-position: center !important;
+  image-rendering: auto !important;
+  filter: none !important;
+}
+
+#game-world-layer > #battle > #arena {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+}
+
+/* Layer 2: In-Game UI Layer (HUD, Chat, Buttons, Floating Windows) */
+#game-ui-layer {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1920px !important;
+  height: 1080px !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+#game-ui-layer > * {
+  pointer-events: auto;
+}
+
+/* Layer 3: Auth Screen Layer (Watermark & Calligraphy Art) */
+#auth-screen {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1920px !important;
+  height: 1080px !important;
+  z-index: 20 !important;
+  display: none;
+  pointer-events: none !important;
+}
+
+#auth-screen > * {
+  pointer-events: auto;
+}
+
+/* Layer 4: Character Selection & Creation Layer */
+#char-select-screen {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1920px !important;
+  height: 1080px !important;
+  z-index: 25 !important;
+  display: none;
+}
+
+#char-select-screen > #csel,
+#char-select-screen > #cnew {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1920px !important;
+  height: 1080px !important;
+}
+
+/* Universal Modals inside Viewport */
+#game-viewport > #modal {
+  z-index: 30 !important;
+}
+
+/* ==========================================================================
+   STRICT SCREEN STATE ISOLATION (No In-Game Leaks on Login / CharSelect)
+   ========================================================================== */
+
+/* State 1: Auth Screen (body.ngate-on or #game-viewport.state-auth) */
+body.ngate-on #game-world-layer,
+body.ngate-on #game-ui-layer,
+body.ngate-on #char-select-screen,
+body.ngate-on #u20r,
+body.ngate-on #u20menu,
+body.ngate-on #u20rc,
+body.ngate-on #u20side,
+body.ngate-on #u20gold,
+body.ngate-on #u20log,
+body.ngate-on #u20boss,
+body.ngate-on #u20zone,
+body.ngate-on #top,
+body.ngate-on #tabs,
+body.ngate-on #panel,
+body.ngate-on #battle,
+body.ngate-on #chatBox,
+#game-viewport.state-auth #game-world-layer,
+#game-viewport.state-auth #game-ui-layer,
+#game-viewport.state-auth #char-select-screen,
+#game-viewport.state-auth #u20r,
+#game-viewport.state-auth #u20menu,
+#game-viewport.state-auth #u20rc,
+#game-viewport.state-auth #u20side,
+#game-viewport.state-auth #u20gold,
+#game-viewport.state-auth #u20log,
+#game-viewport.state-auth #u20boss,
+#game-viewport.state-auth #u20zone,
+#game-viewport.state-auth #top,
+#game-viewport.state-auth #tabs,
+#game-viewport.state-auth #panel,
+#game-viewport.state-auth #battle,
+#game-viewport.state-auth #chatBox {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.ngate-on #auth-screen,
+#game-viewport.state-auth #auth-screen {
+  display: block !important;
+}
+
+body.ngate-on #modal,
+#game-viewport.state-auth #modal {
+  display: flex !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1920px !important;
+  height: 1080px !important;
+  z-index: 100000 !important;
+}
+
+/* State 2: Character Select / Create (body:has(#csel), body:has(#cnew), or #game-viewport.state-char) */
+body:has(#csel) #game-world-layer,
+body:has(#cnew) #game-world-layer,
+body:has(#csel) #game-ui-layer,
+body:has(#cnew) #game-ui-layer,
+body:has(#csel) #auth-screen,
+body:has(#cnew) #auth-screen,
+body:has(#csel) #u20r,
+body:has(#cnew) #u20r,
+body:has(#csel) #u20menu,
+body:has(#cnew) #u20menu,
+body:has(#csel) #u20rc,
+body:has(#cnew) #u20rc,
+body:has(#csel) #u20side,
+body:has(#cnew) #u20side,
+body:has(#csel) #u20gold,
+body:has(#cnew) #u20gold,
+body:has(#csel) #u20log,
+body:has(#cnew) #u20log,
+body:has(#csel) #u20boss,
+body:has(#cnew) #u20boss,
+body:has(#csel) #u20zone,
+body:has(#cnew) #u20zone,
+body:has(#csel) #top,
+body:has(#cnew) #top,
+body:has(#csel) #tabs,
+body:has(#cnew) #tabs,
+body:has(#csel) #panel,
+body:has(#cnew) #panel,
+body:has(#csel) #battle,
+body:has(#cnew) #battle,
+body:has(#csel) #chatBox,
+body:has(#cnew) #chatBox,
+#game-viewport.state-char #game-world-layer,
+#game-viewport.state-char #game-ui-layer,
+#game-viewport.state-char #auth-screen,
+#game-viewport.state-char #u20r,
+#game-viewport.state-char #u20menu,
+#game-viewport.state-char #u20rc,
+#game-viewport.state-char #u20side,
+#game-viewport.state-char #u20gold,
+#game-viewport.state-char #u20log,
+#game-viewport.state-char #u20boss,
+#game-viewport.state-char #u20zone,
+#game-viewport.state-char #top,
+#game-viewport.state-char #tabs,
+#game-viewport.state-char #panel,
+#game-viewport.state-char #battle,
+#game-viewport.state-char #chatBox {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body:has(#csel) #char-select-screen,
+body:has(#cnew) #char-select-screen,
+#game-viewport.state-char #char-select-screen {
+  display: block !important;
+}
+
+/* State 3: In-Game (body:not(.ngate-on):not(:has(#csel)):not(:has(#cnew)) or #game-viewport.state-game) */
+body:not(.ngate-on):not(:has(#csel)):not(:has(#cnew)) #auth-screen,
+body:not(.ngate-on):not(:has(#csel)):not(:has(#cnew)) #char-select-screen,
+#game-viewport.state-game #auth-screen,
+#game-viewport.state-game #char-select-screen {
+  display: none !important;
+}
+
+body:not(.ngate-on):not(:has(#csel)):not(:has(#cnew)) #game-world-layer,
+body:not(.ngate-on):not(:has(#csel)):not(:has(#cnew)) #game-ui-layer,
+#game-viewport.state-game #game-world-layer,
+#game-viewport.state-game #game-ui-layer {
+  display: block !important;
+}
+
+/* In-game UI container fallback */
+#game-container > #app {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1920px !important;
+  height: 1080px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+/* 5. Orientation Warning Disabled (Seamless Scaling On All Orientations) */
+.orientation-warning,
+.orientation-warning.active {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

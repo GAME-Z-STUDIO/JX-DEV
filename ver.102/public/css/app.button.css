@@ -1,0 +1,195 @@
+/**
+ * JX - IDLE: Reusable Wuxia Antique Flat Button System (app.button.css)
+ * Standardized sharp, flat, multi-stop gold/bronze gradient with pattern-wind.svg accent.
+ * Matches Sinh Tồn Offline / Wuxia Flat Plaque aesthetic.
+ */
+
+/* ==========================================================================
+   1. Primary Button (Flat Golden Plaque with pattern-wind accent)
+   ========================================================================== */
+.btn-wuxia-primary,
+.btn-wuxia-gold {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 18px;
+  border-radius: 0 !important;
+  background: linear-gradient(100deg, #9b7940, #c4a369, #a88750) !important;
+  border: 1px solid #d7bc80 !important;
+  color: #161f17 !important;
+  font-family: var(--font, monospace), 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: inset 0 0 0 3px #1a21151a !important;
+  outline: none !important;
+  overflow: hidden;
+  transition: filter 0.15s ease, transform 0.1s ease !important;
+}
+
+.btn-wuxia-primary::before,
+.btn-wuxia-gold::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../res/img/pattern-wind.svg');
+  background-repeat: no-repeat;
+  background-position: 75% 35%;
+  background-size: 260% auto;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.btn-wuxia-primary:hover:not(:disabled),
+.btn-wuxia-gold:hover:not(:disabled) {
+  background: linear-gradient(100deg, #aa8649, #d2b277, #b7945c) !important;
+  border-color: #f0d8a0 !important;
+  color: #0b110c !important;
+  box-shadow: inset 0 0 0 3px #1a211526, 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+.btn-wuxia-primary:active:not(:disabled),
+.btn-wuxia-gold:active:not(:disabled) {
+  transform: translateY(1px) !important;
+}
+
+.btn-wuxia-primary:disabled,
+.btn-wuxia-gold:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(0.6) !important;
+}
+
+/* ==========================================================================
+   2. Secondary Button (Dark Flat Bronze Plaque)
+   ========================================================================== */
+.btn-wuxia-secondary,
+.btn-wuxia-dark {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 18px;
+  border-radius: 0 !important;
+  background: linear-gradient(100deg, #322114, #4a3321, #342316) !important;
+  border: 1px solid #845d2b !important;
+  color: #cbb28d !important;
+  font-family: var(--font, monospace), 'Segoe UI', sans-serif;
+  font-size: 13.5px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.35) !important;
+  outline: none !important;
+  overflow: hidden;
+  transition: all 0.15s ease !important;
+}
+
+.btn-wuxia-secondary::before,
+.btn-wuxia-dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../res/img/pattern-wind.svg');
+  background-repeat: no-repeat;
+  background-position: 25% 65%;
+  background-size: 260% auto;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.btn-wuxia-secondary:hover:not(:disabled),
+.btn-wuxia-dark:hover:not(:disabled) {
+  background: linear-gradient(100deg, #3d2819, #563c27, #3f2a1a) !important;
+  border-color: #a4763a !important;
+  color: #ffffff !important;
+}
+
+.btn-wuxia-secondary:active:not(:disabled),
+.btn-wuxia-dark:active:not(:disabled) {
+  transform: translateY(1px) !important;
+}
+
+.btn-wuxia-secondary:disabled,
+.btn-wuxia-dark:disabled {
+  opacity: 0.35 !important;
+  cursor: not-allowed !important;
+}
+
+/* ==========================================================================
+   3. Tab & Toggle Buttons (Nam / Nữ & Element Selection)
+   ========================================================================== */
+.btn-wuxia-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex: 1;
+  min-height: 32px;
+  padding: 6px 12px;
+  border-radius: 0 !important;
+  background: linear-gradient(100deg, #24160c, #352113, #24160c) !important;
+  border: 1px solid #5a3c22 !important;
+  color: #a49280 !important;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 0.8px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.3) !important;
+  outline: none !important;
+  overflow: hidden;
+  transition: all 0.15s ease;
+}
+
+.btn-wuxia-tab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../res/img/pattern-wind.svg');
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: 300% auto;
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.btn-wuxia-tab:hover:not(:disabled) {
+  border-color: #845d2b !important;
+  color: #ede4d8 !important;
+}
+
+.btn-wuxia-tab.on {
+  background: linear-gradient(100deg, #9b7940, #c4a369, #a88750) !important;
+  border: 1px solid #d7bc80 !important;
+  color: #161f17 !important;
+  font-weight: bold !important;
+  box-shadow: inset 0 0 0 2px rgba(26, 33, 21, 0.18) !important;
+}
+
+.btn-wuxia-tab:disabled {
+  opacity: 0.3 !important;
+  cursor: not-allowed !important;
+  border-color: #2b1d12 !important;
+  color: #554433 !important;
+}

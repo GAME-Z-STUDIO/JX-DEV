@@ -1,0 +1,504 @@
+/* ==========================================================================
+   JX - IDLE / Võ Lâm Hiệp Truyện: Landing & Authentication Stylesheet
+   Sharp, angular Wuxia aesthetics with bold bronze borders, soft orange accents,
+   corner bracket lines, wind pattern backdrop, and antique double-bordered buttons.
+   ========================================================================== */
+
+/* 1. Watermark Notice Badge (identify_.png) */
+.landing-corner-identify {
+  position: absolute !important;
+  top: 20px !important;
+  left: 20px !important;
+  width: 125px !important;
+  height: auto !important;
+  z-index: 100015 !important;
+  opacity: 0.92 !important;
+  pointer-events: none !important;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.95)) !important;
+  transition: opacity 0.3s ease;
+}
+
+/* 1b. Top-Right Calligraphy Art Logo (logo_text.png) */
+.landing-top-logo {
+  position: absolute !important;
+  top: 20px !important;
+  right: 20px !important;
+  width: 250px !important;
+  height: auto !important;
+  z-index: 100015 !important;
+  pointer-events: none !important;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.95)) !important;
+  transition: opacity 0.3s ease;
+}
+
+body:not(.ngate-on) .landing-corner-identify,
+body:not(.ngate-on) .landing-top-logo {
+  display: none !important;
+}
+
+body.ngate-on .landing-corner-identify,
+body.ngate-on .landing-top-logo {
+  display: block !important;
+}
+
+/* 2. Fullscreen Landing Gate Overlay */
+html body.ngate-on #modal {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  background: transparent !important;
+}
+
+html body.ngate-on #modal.hidden {
+  display: none !important;
+}
+
+body.ngate-on #csel,
+body.ngate-on #cnew {
+  display: none !important;
+}
+
+/* Ambient Atmosphere Layer (Particles only above dark backdrop) */
+.landing-ambient-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.landing-ambient-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.landing-mist-layer {
+  display: none !important;
+}
+
+/* Hide default title & close button in gate mode */
+html body.ngate-on #modal::before {
+  display: none !important;
+  content: "" !important;
+}
+
+html body.ngate-on #modal #mClose {
+  display: none !important;
+}
+
+html body.ngate-on #modal .mbox {
+  position: relative !important;
+  z-index: 10 !important;
+  max-width: 430px !important;
+  width: 430px !important;
+  margin: auto !important;
+  background: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+html body.ngate-on #modal .mbox::before,
+html body.ngate-on #modal .mbox::after {
+  display: none !important;
+}
+
+/* 3. Angular Card Container (.ng2) */
+html body.ngate-on .ng2,
+.ng2 {
+  position: relative !important;
+  width: 100% !important;
+  aspect-ratio: auto !important;
+  min-height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 28px 24px 24px 24px !important;
+  border-radius: 0 !important; /* Strict sharp angular box */
+  background: rgba(16, 11, 7, 0.96) !important;
+  border: 2px solid #6b4324 !important; /* Bolder bronze border */
+  box-shadow:
+    0 0 0 1px #22150b,
+    0 20px 48px rgba(0, 0, 0, 0.95) !important;
+  color: var(--text, #ede4d8) !important;
+  overflow: visible !important;
+  filter: none !important;
+}
+
+html body.ngate-on .ng2::before,
+html body.ngate-on .ng2::after,
+.ng2::before,
+.ng2::after {
+  display: none !important;
+}
+
+/* 4. Wind & Cloud Pattern Background Overlay */
+.auth-wind-pattern {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  pointer-events: none !important;
+  opacity: 0.16 !important;
+  z-index: 1 !important;
+  filter: sepia(100%) hue-rotate(350deg) saturate(180%) !important;
+}
+
+/* Content wrapper above the pattern */
+.auth-content-wrap {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* 5. Angular Corner Brackets (tucked inside the card) */
+.auth-bracket {
+  position: absolute !important;
+  width: 18px !important;
+  height: 18px !important;
+  pointer-events: none !important;
+  z-index: 20 !important;
+}
+
+.auth-bracket-tl {
+  top: 8px !important;
+  left: 8px !important;
+  border-top: 2px solid #e5b364 !important;
+  border-left: 2px solid #e5b364 !important;
+  filter: drop-shadow(0 0 3px rgba(229, 179, 100, 0.35)) !important;
+}
+
+.auth-bracket-br {
+  bottom: 8px !important;
+  right: 8px !important;
+  border-bottom: 2px solid #e5b364 !important;
+  border-right: 2px solid #e5b364 !important;
+  filter: drop-shadow(0 0 3px rgba(229, 179, 100, 0.35)) !important;
+}
+
+/* 6. Subtitle: —— VÕ LÂM HIỆP TRUYỆN - IDLE —— */
+.auth-sub-brand {
+  font-family: var(--font, monospace);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #f8be78;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  user-select: none;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+.auth-sub-dash {
+  color: #c48348;
+  opacity: 0.8;
+}
+
+/* 7. Input Fields Container */
+.auth-form-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.auth-field-group {
+  position: relative;
+  width: 100%;
+}
+
+.auth-input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.auth-input-box i.input-icon {
+  position: absolute;
+  left: 14px;
+  color: #8e5c36;
+  font-size: 14px;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.auth-input-box:focus-within i.input-icon {
+  color: #f8be78;
+}
+
+html body.ngate-on .ng2 input,
+.ng2 input {
+  width: 100% !important;
+  height: 42px !important;
+  background: rgba(9, 6, 4, 0.95) !important;
+  border: 1px solid #4a3220 !important;
+  border-radius: 0 !important; /* Sharp corners */
+  color: #ede4d8 !important;
+  font-family: var(--font, monospace) !important;
+  font-size: 13.5px !important;
+  padding: 0 12px 0 40px !important;
+  outline: none !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.85) !important;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease !important;
+}
+
+html body.ngate-on .ng2 input:focus,
+.ng2 input:focus {
+  border-color: #f2963a !important;
+  box-shadow:
+    inset 0 1px 4px rgba(0, 0, 0, 0.9),
+    0 0 6px rgba(242, 150, 58, 0.25) !important;
+}
+
+.ng2 input::placeholder {
+  color: #6d5440 !important;
+  font-size: 12.5px;
+}
+
+/* Override browser autofill default bright background & text styling */
+html body.ngate-on .ng2 input:-webkit-autofill,
+html body.ngate-on .ng2 input:-webkit-autofill:hover,
+html body.ngate-on .ng2 input:-webkit-autofill:focus,
+html body.ngate-on .ng2 input:-webkit-autofill:active,
+.ng2 input:-webkit-autofill,
+.ng2 input:-webkit-autofill:hover,
+.ng2 input:-webkit-autofill:focus,
+.ng2 input:-webkit-autofill:active {
+  -webkit-text-fill-color: #ede4d8 !important;
+  -webkit-box-shadow: 0 0 0 1000px #090604 inset !important;
+  box-shadow: 0 0 0 1000px #090604 inset !important;
+  transition: background-color 50000s ease-in-out 0s !important;
+  caret-color: #ede4d8 !important;
+  border-color: #4a3220 !important;
+  color: #ede4d8 !important;
+  font-family: var(--font, monospace) !important;
+}
+
+html body.ngate-on .ng2 input:-webkit-autofill:focus,
+.ng2 input:-webkit-autofill:focus {
+  border-color: #f2963a !important;
+  -webkit-box-shadow:
+    0 0 0 1000px #090604 inset,
+    0 0 6px rgba(242, 150, 58, 0.25) !important;
+  box-shadow:
+    0 0 0 1000px #090604 inset,
+    0 0 6px rgba(242, 150, 58, 0.25) !important;
+}
+
+/* 8. Options Row (Remember & Show password) */
+.auth-options-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 2px;
+}
+
+.auth-check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+html body.ngate-on .ng2 .cb,
+.ng2 .cb {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  background: #0c0805 !important;
+  border: 1px solid #5a3820 !important;
+  border-radius: 0 !important; /* Sharp corners */
+  cursor: pointer !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.15s ease !important;
+}
+
+html body.ngate-on .ng2 .cb.on,
+.ng2 .cb.on {
+  background: #b0743e !important;
+  border-color: #f8be78 !important;
+}
+
+html body.ngate-on .ng2 .cb.on::after,
+.ng2 .cb.on::after {
+  content: "✓" !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  line-height: 1 !important;
+}
+
+html body.ngate-on .ng2 .cl,
+.ng2 .cl,
+.auth-check-item span {
+  font-size: 12px !important;
+  color: #a49381 !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  text-shadow: 0 1px 1px #000 !important;
+  transition: color 0.15s ease;
+  display: flex;
+  align-items: center;
+}
+
+.auth-check-item:hover span,
+.ng2 .cl:hover {
+  color: #f8be78 !important;
+}
+
+/* 9. Action Buttons (Double-Border Antique Brass style matching reference) */
+.auth-actions-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+html body.ngate-on .ng2 .auth-btn,
+.auth-btn {
+  position: relative !important;
+  width: 100% !important;
+  height: 44px !important;
+  border-radius: 0 !important;
+  font-family: var(--font, monospace) !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  letter-spacing: 1.2px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  text-transform: uppercase !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  transition: filter 0.15s ease, transform 0.1s ease !important;
+}
+
+html body.ngate-on .ng2 .auth-btn span,
+.auth-btn span {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 8px;
+}
+
+/* Primary Button (Đăng Nhập): Flat Gold Plaque */
+html body.ngate-on .ng2 .auth-btn-primary,
+.auth-btn-primary {
+  background: linear-gradient(100deg, #9b7940, #c4a369, #a88750) !important;
+  border: 1px solid #d7bc80 !important;
+  color: #161f17 !important;
+  box-shadow: inset 0 0 0 3px #1a21151a !important;
+  outline: none !important;
+}
+
+html body.ngate-on .ng2 .auth-btn-primary::before,
+.auth-btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../res/img/pattern-wind.svg');
+  background-repeat: no-repeat;
+  background-position: 70% 30%;
+  background-size: 260% auto;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+html body.ngate-on .ng2 .auth-btn-primary:hover,
+.auth-btn-primary:hover {
+  background: linear-gradient(100deg, #aa8649, #d2b277, #b7945c) !important;
+  border-color: #f0d8a0 !important;
+  color: #0b110c !important;
+  box-shadow: inset 0 0 0 3px #1a211526, 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+html body.ngate-on .ng2 .auth-btn-primary:active,
+.auth-btn-primary:active {
+  transform: translateY(1px);
+}
+
+/* Secondary Button (Đăng Ký): Dark Flat Bronze Plaque */
+html body.ngate-on .ng2 .auth-btn-secondary,
+.auth-btn-secondary {
+  background: linear-gradient(100deg, #322114, #4a3321, #342316) !important;
+  border: 1px solid #845d2b !important;
+  color: #cbb28d !important;
+  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.35) !important;
+  outline: none !important;
+}
+
+html body.ngate-on .ng2 .auth-btn-secondary::before,
+.auth-btn-secondary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../res/img/pattern-wind.svg');
+  background-repeat: no-repeat;
+  background-position: 25% 65%;
+  background-size: 260% auto;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+html body.ngate-on .ng2 .auth-btn-secondary:hover,
+.auth-btn-secondary:hover {
+  background: linear-gradient(100deg, #3d2819, #563c27, #3f2a1a) !important;
+  border-color: #a4763a !important;
+  color: #ffffff !important;
+}
+
+html body.ngate-on .ng2 .auth-btn-secondary:active,
+.auth-btn-secondary:active {
+  transform: translateY(1px);
+}
+
+/* 10. Notice / Error Messages (.auth-notice-box) */
+.auth-notice-box {
+  background: rgba(180, 50, 42, 0.15);
+  border: 1px solid #b8322a;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+}
+
+.auth-notice-box .reqbad {
+  margin: 0 0 6px 0;
+  color: #ff7875;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ng2x {
+  display: none !important;
+}

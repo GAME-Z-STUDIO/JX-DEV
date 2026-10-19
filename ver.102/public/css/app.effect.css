@@ -1,0 +1,184 @@
+/**
+ * JX-IDLE Visual Effects, Animations & Pure CSS HUD Bars (app.effect.css)
+ * 100% Pure CSS - No raster UI image dependencies
+ */
+
+/* 1. Shimmer & Glow Keyframes */
+@keyframes jx-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+@keyframes barShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
+@keyframes hpPulse {
+  0%, 100% { filter: drop-shadow(0 0 2px rgba(220, 50, 35, 0.6)); }
+  50% { filter: drop-shadow(0 0 6px rgba(255, 80, 60, 0.95)); }
+}
+
+@keyframes mpGlow {
+  0%, 100% { filter: drop-shadow(0 0 2px rgba(45, 120, 240, 0.6)); }
+  50% { filter: drop-shadow(0 0 6px rgba(70, 160, 255, 0.95)); }
+}
+
+@keyframes xpRadiance {
+  0%, 100% { filter: drop-shadow(0 0 2px rgba(220, 180, 50, 0.6)); }
+  50% { filter: drop-shadow(0 0 6px rgba(255, 215, 80, 0.95)); }
+}
+
+/* 2. Cooldown & Dot Indicators */
+.dot.on {
+  animation: jx-pulse 1.4s infinite ease-in-out;
+}
+
+.pbtn .cd {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+  transform-origin: bottom;
+}
+
+/* 3. Pure CSS Animated HP / MP / EXP Bars */
+.bar {
+  position: relative !important;
+  background: #080a09 !important;
+  border: 1px solid #3d3b2f !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  border-radius: 3px !important;
+  overflow: hidden !important;
+}
+
+.bar i {
+  position: absolute !important;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 2px !important;
+  transition: width 0.2s cubic-bezier(0.2, 0.8, 0.25, 1) !important;
+  overflow: hidden !important;
+}
+
+/* Fluid Light Shimmer Across Bars */
+.bar i::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.12) 30%,
+    rgba(255, 255, 255, 0.48) 50%,
+    rgba(255, 255, 255, 0.12) 70%,
+    transparent 100%
+  ) !important;
+  animation: barShimmer 2.4s infinite ease-in-out !important;
+  pointer-events: none !important;
+}
+
+/* Sinh Lực (HP) - Deep Crimson Ruby Liquid */
+.bar.hp i,
+#hud .bar.hp i {
+  background: linear-gradient(180deg, #ff715b 0%, #db291a 48%, #850c05 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(0, 0, 0, 0.5) !important;
+  animation: hpPulse 3s infinite ease-in-out !important;
+}
+
+/* Nội Lực (MP) - Luminous Sapphire Cyan */
+.bar.mp i,
+#hud .bar.mp i {
+  background: linear-gradient(180deg, #6ec6ff 0%, #1e88e5 48%, #0d47a1 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(0, 0, 0, 0.5) !important;
+  animation: mpGlow 3.5s infinite ease-in-out !important;
+}
+
+/* Kinh Nghiệm (EXP) - Radiant Gold Topaz */
+.bar.xp i,
+.bar.xpb i,
+#hud .bar.xp i {
+  background: linear-gradient(180deg, #fff59d 0%, #fbc02d 48%, #f57f17 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), inset 0 -1px 0 rgba(0, 0, 0, 0.5) !important;
+  animation: xpRadiance 4s infinite ease-in-out !important;
+}
+
+/* Crisp Text Overlay on Top of Bars */
+.bar span,
+.bar.xpb span,
+#hud .bar span {
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: var(--font, monospace) !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px #000, 0 0 3px #000, 1px 0 2px #000, -1px 0 2px #000 !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* 4. FontAwesome Pure CSS Tabbar Icons */
+#tabs button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+#tabs button::before {
+  content: "";
+  font-family: "Font Awesome 7 Free", "Font Awesome 6 Free", "FontAwesome" !important;
+  font-weight: 900 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+  color: #a49e89 !important;
+  width: 26px !important;
+  height: 26px !important;
+  margin-left: -13px !important;
+  top: 3px !important;
+  background: none !important;
+  text-shadow: 0 0 3px #000 !important;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.25, 1) !important;
+}
+
+#tabs button.on::before {
+  color: #ffd970 !important;
+  text-shadow: 0 0 8px rgba(255, 217, 112, 0.7), 0 0 2px #000 !important;
+  transform: translateY(-2px) scale(1.15) !important;
+}
+
+#tabs button[data-t="log"]::before { content: "\f5a0" !important; }
+#tabs button[data-t="char"]::before { content: "\f678" !important; }
+#tabs button[data-t="inv"]::before { content: "\f81d" !important; }
+#tabs button[data-t="skill"]::before { content: "\f0e7" !important; }
+#tabs button[data-t="forge"]::before { content: "\f6e3" !important; }
+#tabs button[data-t="quest"]::before { content: "\f70e" !important; }
+#tabs button[data-t="more"]::before { content: "\f013" !important; }
+#tabs #tabRide::before { content: "\f0c0" !important; }
+
+/* 5. Realtime FPS Badge */
+.fps-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  color: #69f0ae;
+  background: rgba(10, 20, 16, 0.85);
+  border: 1px solid #2e7d32;
+  box-shadow: 0 0 6px rgba(105, 240, 174, 0.3), inset 0 0 4px rgba(0, 0, 0, 0.6);
+  padding: 1px 7px;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
